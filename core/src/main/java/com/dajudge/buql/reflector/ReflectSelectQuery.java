@@ -40,6 +40,11 @@ public class ReflectSelectQuery<Q, R> {
             final Map<String, Q> params,
             final Callback<R> callback
     ) {
+        assert dialect != null;
+        assert engine != null;
+        assert params != null;
+        assert callback != null;
+
         final QueryWithParameters query = queryModel.create(params).toSelectQuery(dialect);
         engine.executeQuery(query.getSql(), query.getQueryParameters(), new DefaultDatabaseResultCallback() {
             @Override

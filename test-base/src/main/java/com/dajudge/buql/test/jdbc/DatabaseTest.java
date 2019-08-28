@@ -14,13 +14,14 @@ import java.util.ServiceLoader;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-public class DatabaseTest {
+public abstract class DatabaseTest {
     private Connection connection;
     JdbcDatabaseEngine engine;
     Dialect dialect;
 
     @Before
-    public void setup() throws SQLException {
+    public void setupDatabase() throws SQLException {
+        System.out.println("DB");
         final TestEnvironment testEnvironment = ServiceLoader.load(TestEnvironment.class).iterator().next();
         connection = testEnvironment.newConnection();
         dialect = testEnvironment.getDialect();
