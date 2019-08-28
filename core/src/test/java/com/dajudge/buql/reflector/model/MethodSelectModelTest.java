@@ -1,0 +1,133 @@
+package com.dajudge.buql.reflector.model;
+
+import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
+import com.dajudge.buql.query.engine.DatabaseEngine;
+import com.dajudge.buql.query.engine.DatabaseResultCallback;
+import com.dajudge.buql.reflector.ReflectSelectQuery;
+import com.dajudge.buql.reflector.annotations.BooleanOperator;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.dajudge.buql.reflector.annotations.BooleanOperationType.OR;
+import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
+import static java.util.Arrays.asList;
+
+public class MethodSelectModelTest {
+
+    @BooleanOperator(OR)
+    public static class OrFilter {
+        public OrFilter(final Condition1 condition1, final Condition2 condition2) {
+            this.condition1 = condition1;
+            this.condition2 = condition2;
+        }
+
+        private final Condition1 condition1;
+        private final Condition2 condition2;
+
+        public static class Condition1 {
+            private final String stringValue;
+
+            public Condition1(final String stringValue) {
+                this.stringValue = stringValue;
+            }
+
+            public String getStringValue() {
+                return stringValue;
+            }
+        }
+
+        public static class Condition2 {
+            private final int intValue;
+
+            public Condition2(final int intValue) {
+                this.intValue = intValue;
+            }
+
+            public int getIntValue() {
+                return intValue;
+            }
+        }
+
+        public Condition1 getCondition1() {
+            return condition1;
+        }
+
+        public Condition2 getCondition2() {
+            return condition2;
+        }
+    }
+
+    static class TestResultType {
+        private String resultString;
+
+        public String getResultString() {
+            return resultString;
+        }
+
+        public void setResultString(final String resultString) {
+            this.resultString = resultString;
+        }
+
+        @Override
+        public String toString() {
+            return "TestResultType{" +
+                    "resultString='" + resultString + '\'' +
+                    '}';
+        }
+    }
+
+    interface TestQueryInterface {
+        Map<String, List<TestResultType>> findBy(final Map<String, OrFilter> predicates);
+    }
+
+    @Test
+    public void play() {
+        final String tableName = "myTable";
+        final MethodSelectModel model = MethodSelectModelFactory.createSelectModel(tableName, OrFilter.class, TestResultType.class);
+        final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
+            put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
+        }};
+        final ReflectSelectQuery<OrFilter, TestResultType> query = translateMethodModelToQuery(model);
+        final DatabaseEngine engine = new DatabaseEngine() {
+            @Override
+            public void executeQuery(final String query, final List<Object> params, final DatabaseResultCallback cb) {
+                System.out.println(query);
+                System.out.println(params);
+                final List<Map<String, Object>> results = asList(new HashMap<String, Object>() {{
+                    put("P_ID", "ID0");
+                    put("resultString", "lolcats123");
+                }});
+                results.forEach(row -> {
+                    cb.onRow(new DatabaseResultCallback.ResultRow() {
+                        @Override
+                        public Object getObject(final String colName) {
+                            System.out.println(colName);
+                            return row.get(colName);
+                        }
+                    });
+                });
+                cb.done();
+            }
+        };
+        query.execute(new PostgresDialect(), engine, params, new ReflectSelectQuery.Callback<TestResultType>() {
+            @Override
+            public void onResult(final String id, final TestResultType value) {
+                System.out.println(id + " -> " + value);
+            }
+
+            @Override
+            public void done() {
+                System.out.println("Done");
+            }
+
+            @Override
+            public void onError(final Exception e) {
+                System.out.println(e);
+            }
+        });
+    }
+
+}

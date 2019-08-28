@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(":core")
+    implementation libSlf4j
+    implementation libJUnit
+}
+
+test {
+    onlyIf { false }
+}

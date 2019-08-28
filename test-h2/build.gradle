@@ -1,0 +1,10 @@
+dependencies {
+    testImplementation project(":core")
+    testImplementation project(":test-base")
+    testRuntime libH2Jdbc
+    testRuntime libLogback
+}
+
+test {
+    testClassesDirs = project(':test-base').sourceSets.main.output.classesDirs
+}

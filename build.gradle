@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+wrapper {
+    gradleVersion = '5.5.1'
+}
+
+ext {
+    libPostgresJdbc = 'org.postgresql:postgresql:42.2.6'
+    libH2Jdbc = 'com.h2database:h2:1.4.199'
+    libPostgresEmbedded = 'ru.yandex.qatools.embed:postgresql-embedded:2.10'
+    libJUnit = 'junit:junit:4.12'
+    libSlf4j = 'org.slf4j:slf4j-api:1.7.28'
+    libLogback = 'ch.qos.logback:logback-classic:1.2.3'
+    libFlapdoodle = 'de.flapdoodle.embed:de.flapdoodle.embed.process:2.1.2'
+    libCommonsIO = 'commons-io:commons-io:2.6'
+}
+
+subprojects {
+    apply plugin: "java"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories.addAll rootProject.buildscript.repositories
+    buildscript.repositories.addAll rootProject.buildscript.repositories
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}

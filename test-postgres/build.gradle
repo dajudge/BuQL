@@ -1,0 +1,20 @@
+dependencies {
+    testImplementation project(":core")
+    testImplementation project(":test-base")
+    testImplementation libPostgresEmbedded
+    testRuntime libPostgresJdbc
+    testRuntime libLogback
+
+    testRuntime(libFlapdoodle) {
+        because 'the version coming with postgres embedded does not work with java 11'
+        force = true
+    }
+    testRuntime(libCommonsIO) {
+        because "the most recent flapdoodle requires a more recent commons IO version"
+        force = true
+    }
+}
+
+test {
+    testClassesDirs = project(':test-base').sourceSets.main.output.classesDirs
+}
