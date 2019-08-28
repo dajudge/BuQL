@@ -1,0 +1,14 @@
+image: amazoncorretto:11.0.4
+
+cache:
+  paths:
+  - .gradle/
+
+
+stages:
+- build
+
+build:
+  stage: build
+  script:
+  - ./gradlew clean build
