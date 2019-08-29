@@ -1,0 +1,23 @@
+#! /bin/bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+IMG=amazoncorretto:11.0.4
+
+if [[ -z "$@" ]]; then
+    CMD=bash
+else
+    CMD=$@
+fi
+
+docker run --rm \
+    -v /etc/passwd:/etc/passwd \
+    -v /etc/group:/etc/group \
+    -v $HOME:$HOME \
+    -w $DIR \
+    -e USER="$USER" \
+    --net host \
+    --privileged \
+    -it $IMG sudo -u ${USER} -i sh -c "cd $DIR; $CMD"
