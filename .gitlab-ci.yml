@@ -14,4 +14,11 @@ stages:
 build:
   stage: build
   script:
-  - "CI_MODE=true ./workbench ./gradlew clean build"
+  - "./workbench ./gradlew clean build"
+  artifacts:
+    when: always
+    paths:
+      - "*/build/reports/tests/test"
+    reports:
+      junit:
+        - "*/build/test-results/test/TEST-*.xml"

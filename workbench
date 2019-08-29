@@ -3,7 +3,6 @@
 set -e
 
 DIR=$(dirname "$(readlink -f "$0")")
-
 IMG=$(docker build -q $DIR/.workbench)
 
 if [ "$#" -eq 0 ]; then
@@ -12,21 +11,15 @@ else
     CMD="$@"
 fi
 
-if [ "true" = "$CI_MODE" ]; then
+if [ ! -z "$CI_PROJECT_DIR" ]; then
     CONTAINER_OPTS="-v /root:/root -v /${CI_PROJECT_DIR}:/${CI_PROJECT_DIR} -w $CI_PROJECT_DIR"
 else
-    CONTAINER_OPTS="-e USER=$USER -v $HOME:$HOME --entrypoint entrypoint-interactive.sh -w $DIR -it"
+    CONTAINER_OPTS="-e USER=$USER -v $HOME:$HOME -u $(id -u):$(id -g) -w $DIR -it"
 fi
-
-echo docker run --rm \
-    -v /etc/passwd:/etc/passwd \
-    -v /etc/group:/etc/group \
-    --net host \
-    $CONTAINER_OPTS $IMG $CMD
-
 
 docker run --rm \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
+    -e WB_GROUPS="$(groups)" \
     --net host \
     $CONTAINER_OPTS $IMG $CMD
