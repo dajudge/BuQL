@@ -14,4 +14,4 @@ stages:
 build:
   stage: build
   script:
-  - "./workbench ./gradlew clean build"
+  - "CI_MODE=true ./workbench ./gradlew clean build"

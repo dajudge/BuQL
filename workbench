@@ -6,23 +6,25 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 IMG=$(docker build -q $DIR/.workbench)
 
-if [ -z "$CI_PROJECT_DIR" ]; then
-    INTERACTIVE="-it"
-else
-    INTERACTIVE=""
-fi
-
 if [ "$#" -eq 0 ]; then
     CMD=bash
 else
     CMD="$@"
 fi
 
+if [ "true" = "$CI_MODE" ]; then
+    INTERACTIVE=""
+else
+    INTERACTIVE="--entrypoint entrypoint-interactive.sh -it"
+fi
+
+
 docker run --rm \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
     -v $HOME:$HOME \
     -e USER="$USER" \
+    -w $DIR \
     --net host \
     --privileged \
-    $INTERACTIVE $IMG sudo -u ${USER} -i sh -c "cd $DIR; $CMD"
+    $INTERACTIVE $IMG $CMD
