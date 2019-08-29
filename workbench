@@ -3,6 +3,7 @@
 set -e
 
 DIR=$(dirname "$(readlink -f "$0")")
+echo $DIR
 
 IMG=$(docker build -q $DIR/.workbench)
 
@@ -13,10 +14,17 @@ else
 fi
 
 if [ "true" = "$CI_MODE" ]; then
-    INTERACTIVE="-v /root:/root"
+    CONTAINER_OPTS="-v /root:/root"
 else
-    INTERACTIVE="-e USER=$USER -v $HOME:$HOME --entrypoint entrypoint-interactive.sh -it"
+    CONTAINER_OPTS="-e USER=$USER -v $HOME:$HOME --entrypoint entrypoint-interactive.sh -it"
 fi
+
+echo docker run --rm \
+    -v /etc/passwd:/etc/passwd \
+    -v /etc/group:/etc/group \
+    -w $DIR \
+    --net host \
+    $CONTAINER_OPTS $IMG $CMD
 
 
 docker run --rm \
@@ -24,5 +32,4 @@ docker run --rm \
     -v /etc/group:/etc/group \
     -w $DIR \
     --net host \
-    --privileged \
-    $INTERACTIVE $IMG $CMD
+    $CONTAINER_OPTS $IMG $CMD
