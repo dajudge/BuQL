@@ -6,6 +6,12 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 IMG=$(docker build -q $DIR/.workbench)
 
+if [ -z "$CI_PROJECT_DIR" ]; then
+    INTERACTIVE="-it"
+else
+    INTERACTIVE=""
+fi
+
 if [ "$#" -eq 0 ]; then
     CMD=bash
 else
@@ -19,4 +25,4 @@ docker run --rm \
     -e USER="$USER" \
     --net host \
     --privileged \
-    -it $IMG sudo -u ${USER} -i sh -c "cd $DIR; $CMD"
+    $INTERACTIVE $IMG sudo -u ${USER} -i sh -c "cd $DIR; $CMD"
