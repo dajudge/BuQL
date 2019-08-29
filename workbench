@@ -6,10 +6,10 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 IMG=$(docker build -q $DIR/.workbench)
 
-if [ -z "$@" ]; then
+if [ "$#" -eq 0 ]; then
     CMD=bash
 else
-    CMD=$@
+    CMD="$@"
 fi
 
 docker run --rm \
