@@ -13,17 +13,15 @@ else
 fi
 
 if [ "true" = "$CI_MODE" ]; then
-    INTERACTIVE=""
+    INTERACTIVE="-v /root:/root"
 else
-    INTERACTIVE="--entrypoint entrypoint-interactive.sh -it"
+    INTERACTIVE="-e USER=$USER -v $HOME:$HOME --entrypoint entrypoint-interactive.sh -it"
 fi
 
 
 docker run --rm \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
-    -v $HOME:$HOME \
-    -e USER="$USER" \
     -w $DIR \
     --net host \
     --privileged \
