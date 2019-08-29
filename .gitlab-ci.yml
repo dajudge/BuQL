@@ -1,4 +1,4 @@
-image: amazoncorretto:11.0.4
+image: dind:latest
 
 cache:
   paths:
@@ -11,4 +11,4 @@ stages:
 build:
   stage: build
   script:
-  - ./gradlew clean build
+  - ./workbench ./gradlew clean build

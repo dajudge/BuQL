@@ -4,7 +4,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-IMG=amazoncorretto:11.0.4
+IMG=$(docker build -q $DIR/.workbench)
 
 if [[ -z "$@" ]]; then
     CMD=bash
@@ -16,7 +16,6 @@ docker run --rm \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
     -v $HOME:$HOME \
-    -w $DIR \
     -e USER="$USER" \
     --net host \
     --privileged \
