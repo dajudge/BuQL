@@ -11,4 +11,4 @@ stages:
 build:
   stage: build
   script:
-  - ./workbench ./gradlew clean build
+  - sh -c "./workbench ./gradlew clean build"

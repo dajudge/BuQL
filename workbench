@@ -1,12 +1,12 @@
-#! /bin/bash
+#! /bin/sh
 
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR=$(dirname "$(readlink -f "$0")")
 
 IMG=$(docker build -q $DIR/.workbench)
 
-if [[ -z "$@" ]]; then
+if [ -z "$@" ]; then
     CMD=bash
 else
     CMD=$@
