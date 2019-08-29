@@ -1,4 +1,7 @@
-image: docker:19.03.1-dind
+image: docker:19.03.1
+
+services:
+- docker:dind
 
 cache:
   paths:
@@ -11,4 +14,4 @@ stages:
 build:
   stage: build
   script:
-  - sh -c "./workbench ./gradlew clean build"
+  - ./workbench ./gradlew clean build
