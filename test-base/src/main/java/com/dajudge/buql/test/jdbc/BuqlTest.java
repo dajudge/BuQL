@@ -8,7 +8,6 @@ public abstract class BuqlTest extends DatabaseTest {
 
     @Before
     public void setupBuql() {
-        System.out.println("buql");
         assert dialect != null;
         assert engine != null;
         buql = new BuQL(dialect, engine);

@@ -2,13 +2,17 @@ package com.dajudge.buql.util;
 
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.util.Collections.emptyList;
 
 public class CollectorCallback<R> implements ReflectSelectQuery.Callback<R> {
-    final Map<String, List<R>> ret = new HashMap<>();
+    private final Map<String, List<R>> ret = new HashMap<>();
+    private final Collection<String> queriedKeys;
+
+    public CollectorCallback(final Collection<String> queriedKeys) {
+        this.queriedKeys = queriedKeys;
+    }
 
     @Override
     public void onResult(final String id, final R value) {
@@ -17,6 +21,7 @@ public class CollectorCallback<R> implements ReflectSelectQuery.Callback<R> {
 
     @Override
     public void done() {
+        queriedKeys.forEach(key -> ret.computeIfAbsent(key, k -> emptyList()));
     }
 
     @Override
@@ -25,6 +30,6 @@ public class CollectorCallback<R> implements ReflectSelectQuery.Callback<R> {
     }
 
     public Map<String, List<R>> getResult() {
-        return null;
+        return ret;
     }
 }

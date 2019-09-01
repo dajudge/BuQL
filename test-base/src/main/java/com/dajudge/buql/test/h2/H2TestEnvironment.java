@@ -1,4 +1,4 @@
-package com.dajudge.buql.test.jdbc;
+package com.dajudge.buql.test.h2;
 
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.dialect.h2.H2Dialect;

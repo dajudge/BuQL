@@ -2,6 +2,9 @@ dependencies {
     implementation project(":core")
     implementation libSlf4j
     implementation libJUnit
+    
+    runtime libH2Jdbc
+    runtime libLogback
 }
 
 test {

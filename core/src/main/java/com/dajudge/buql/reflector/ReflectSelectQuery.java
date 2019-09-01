@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.function.Function;
 
 public class ReflectSelectQuery<Q, R> {
     private static final Logger LOG = LoggerFactory.getLogger(ReflectSelectQuery.class);
@@ -56,8 +55,10 @@ public class ReflectSelectQuery<Q, R> {
 
             @Override
             public void onRow(final ResultRow row) {
-                final Function<String, Object> colAccessor = c -> row.getObject(c);
-                callback.onResult(resultMapper.getId(colAccessor), resultMapper.getResultObject(colAccessor));
+                callback.onResult(
+                        resultMapper.getId(row::getObject),
+                        resultMapper.getResultObject(row::getObject)
+                );
             }
 
             @Override

@@ -5,9 +5,11 @@ import com.dajudge.buql.analyzer.BulkToManyAnalyzer;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
+import com.dajudge.buql.reflector.ReflectSelectQuery.Callback;
 import com.dajudge.buql.reflector.annotations.Table;
 import com.dajudge.buql.util.CollectorCallback;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
@@ -36,14 +38,37 @@ public class BuQL {
         final Table tableAnnotation = iface.getAnnotation(Table.class);
         final String tableName = tableAnnotation.value();
         final Function<Method, ReflectSelectQuery<?, ?>> compiler = m -> compile(tableName, m);
-        final Object proxy = newProxyInstance(getClass().getClassLoader(), new Class[]{iface}, (o, method, objects) -> {
-            final ReflectSelectQuery<?, ?> query = cachedQueries.computeIfAbsent(method, compiler);
-            final CollectorCallback cb = new CollectorCallback();
-            final Map params = (Map<String, ?>) objects[0];
-            query.execute(dialect, engine, params, cb);
-            return cb.getResult();
-        });
+        final Object proxy = newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{iface},
+                createInvocationHandler(compiler)
+        );
         return (T) proxy;
+    }
+
+    private InvocationHandler createInvocationHandler(
+            final Function<Method, ReflectSelectQuery<?, ?>> compiler
+    ) {
+        return (o, method, objects) -> invocationHandler(compiler::apply, method, objects);
+    }
+
+    private <Q, R> Map<String, List<R>> invocationHandler(
+            final Function<Method, ReflectSelectQuery<Q, R>> compiler,
+            final Method method,
+            final Object[] objects
+    ) {
+        final ReflectSelectQuery<Q, R> query = getCachedOrNewQuery(compiler, method);
+        final Map<String, Q> params = (Map<String, Q>) objects[0];
+        final CollectorCallback<R> cb = new CollectorCallback<>(params.keySet());
+        query.execute(dialect, engine, params, cb);
+        return cb.getResult();
+    }
+
+    private <Q, R> ReflectSelectQuery<Q, R> getCachedOrNewQuery(
+            final Function<Method, ReflectSelectQuery<Q, R>> compiler,
+            final Method method
+    ) {
+        return (ReflectSelectQuery<Q, R>) cachedQueries.computeIfAbsent(method, compiler);
     }
 
     private ReflectSelectQuery<?, ?> compile(final String tableName, final Method method) {
