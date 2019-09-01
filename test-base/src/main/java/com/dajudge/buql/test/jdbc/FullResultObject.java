@@ -1,5 +1,7 @@
 package com.dajudge.buql.test.jdbc;
 
+import com.dajudge.buql.reflector.annotations.Transient;
+
 public class FullResultObject {
     private long pk;
     private String stringValue;
@@ -28,6 +30,11 @@ public class FullResultObject {
     public void setLongValue(final long longValue) {
         this.longValue = longValue;
     }
+
+    @Transient
+    public void setPropertyThatDoesNotExist(final String value) {
+    }
+
 
     @Override
     public String toString() {

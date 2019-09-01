@@ -8,7 +8,8 @@ public class ResultField<R> {
 
     public ResultField(
             final String tableColumn,
-            final BiConsumer<R, Object> setter) {
+            final BiConsumer<R, Object> setter
+    ) {
         this.tableColumn = tableColumn;
         this.setter = setter;
     }

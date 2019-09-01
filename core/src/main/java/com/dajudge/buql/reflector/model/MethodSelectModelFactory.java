@@ -1,5 +1,6 @@
 package com.dajudge.buql.reflector.model;
 
+import com.dajudge.buql.reflector.annotations.Transient;
 import com.dajudge.buql.reflector.model.translate.ReflectorPredicateVisitor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
@@ -33,6 +34,7 @@ public class MethodSelectModelFactory {
             final BeanInfo resultBean = Introspector.getBeanInfo(resultType);
             return Stream.of(resultBean.getPropertyDescriptors())
                     .filter(prop -> prop.getWriteMethod() != null)
+                    .filter(prop -> prop.getWriteMethod().getAnnotation(Transient.class) == null)
                     .map(MethodSelectModelFactory::<R>toResultField)
                     .collect(toList());
         } catch (final IntrospectionException e) {
