@@ -10,7 +10,7 @@ public class EqualsPredicate implements OperandWrapper {
 
     public EqualsPredicate(
             final PropertyDescriptor prop,
-                           final Function<Object, Object> parentAccessor
+            final Function<Object, Object> parentAccessor
     ) {
         this.prop = prop;
         this.parentAccessor = parentAccessor;

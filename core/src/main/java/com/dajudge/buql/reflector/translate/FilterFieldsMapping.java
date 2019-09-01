@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+
 public class FilterFieldsMapping {
     private final Map<String, Function<Object, Object>> readers = new HashMap<>();
 
@@ -21,7 +23,7 @@ public class FilterFieldsMapping {
     }
 
     public Map<String, Object> extractFilterFields(final Object object) {
-        return readers.entrySet().stream().collect(Collectors.toMap(
+        return readers.entrySet().stream().collect(toMap(
                 Map.Entry::getKey,
                 e -> e.getValue().apply(object)
         ));

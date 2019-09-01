@@ -1,5 +1,7 @@
 package com.dajudge.buql.reflector.model.visitor;
 
+import com.dajudge.buql.reflector.annotations.Transient;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -30,6 +32,7 @@ public class QueryFieldsWrapper implements OperandAccessor {
         return Stream.of(bean.getPropertyDescriptors())
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
+                .filter(it -> it.getReadMethod().getAnnotation(Transient.class) == null)
                 .map(prop -> new EqualsPredicate(prop, parentAccessor))
                 .collect(toList());
     }

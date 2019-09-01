@@ -19,7 +19,10 @@ public class QueryTypeWrapper implements OperandWrapper {
     public <T> T visit(final QueryTypePredicateVisitor<T> queryTypePredicateVisitor) {
         final BooleanOperator booleanOperator = type.getAnnotation(BooleanOperator.class);
         if (booleanOperator != null) {
-            return queryTypePredicateVisitor.booleanTypeOperator(booleanOperator.value(), new BooleanOperatorWrapper(type, parentAccessor));
+            return queryTypePredicateVisitor.booleanTypeOperator(
+                    booleanOperator.value(),
+                    new BooleanOperatorWrapper(type, parentAccessor)
+            );
         }
         return queryTypePredicateVisitor.booleanTypeOperator(AND, new QueryFieldsWrapper(type, parentAccessor));
     }

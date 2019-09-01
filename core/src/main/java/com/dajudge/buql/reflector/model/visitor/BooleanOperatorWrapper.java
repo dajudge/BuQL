@@ -1,5 +1,7 @@
 package com.dajudge.buql.reflector.model.visitor;
 
+import com.dajudge.buql.reflector.annotations.Transient;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -31,6 +33,7 @@ public class BooleanOperatorWrapper implements OperandAccessor {
         return Stream.of(bean.getPropertyDescriptors())
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
+                .filter(it -> it.getReadMethod().getAnnotation(Transient.class) != null)
                 .map(p -> new QueryTypeWrapper(p.getPropertyType(), o -> read(o, p)))
                 .collect(Collectors.toList());
     }

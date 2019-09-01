@@ -1,5 +1,7 @@
 package com.dajudge.buql.test.jdbc;
 
+import com.dajudge.buql.reflector.annotations.Transient;
+
 public class SimpleQueryObject {
     private final long longValue;
 
@@ -9,5 +11,10 @@ public class SimpleQueryObject {
 
     public long getLongValue() {
         return longValue;
+    }
+
+    @Transient
+    public String getQueryIrrelevantValue() {
+        return null;
     }
 }

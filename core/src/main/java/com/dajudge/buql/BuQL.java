@@ -68,20 +68,21 @@ public class BuQL {
             final Function<Method, ReflectSelectQuery<Q, R>> compiler,
             final Method method
     ) {
-        return (ReflectSelectQuery<Q, R>) cachedQueries.computeIfAbsent(method, compiler);
+        final ReflectSelectQuery<?, ?> query = cachedQueries.computeIfAbsent(method, compiler);
+        return (ReflectSelectQuery<Q, R>) query;
     }
 
     private ReflectSelectQuery<?, ?> compile(final String tableName, final Method method) {
         final List<Optional<ReflectSelectQuery<?, ?>>> candidates = CONVERTERS.stream()
                 .map(c -> c.convert(tableName, method))
-                .filter(c -> c.isPresent())
+                .filter(Optional::isPresent)
                 .collect(toList());
-        if (candidates.isEmpty()) {
-            throw new IllegalArgumentException("Don't know how to compile " + method);
-        } else if (candidates.size() > 1) {
+        if (candidates.size() > 1) {
             throw new IllegalArgumentException("Ambiguous compilation strategies for " + method);
         }
-        return candidates.get(0).get();
+        return candidates.get(0).orElseThrow(() ->
+                new IllegalArgumentException("Don't know how to compile " + method)
+        );
     }
 
 }
