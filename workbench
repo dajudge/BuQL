@@ -18,6 +18,7 @@ fi
 
 if [ ! -z "$CI_PROJECT_DIR" ]; then
     CONTAINER_OPTS="-v /root:/root -v /${CI_PROJECT_DIR}:/${CI_PROJECT_DIR}"
+    USER=root
 else
     CONTAINER_OPTS="-v $HOME:$HOME -it"
 fi
