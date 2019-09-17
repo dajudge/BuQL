@@ -11,7 +11,7 @@ wrapper {
 ext {
     libPostgresJdbc = 'org.postgresql:postgresql:42.2.6'
     libH2Jdbc = 'com.h2database:h2:1.4.199'
-    libPostgresEmbedded = 'ru.yandex.qatools.embed:postgresql-embedded:2.10'
+    libTestcontainersPostgres = 'org.testcontainers:postgresql:1.12.1'
     libJUnit = 'junit:junit:4.12'
     libSlf4j = 'org.slf4j:slf4j-api:1.7.28'
     libLogback = 'ch.qos.logback:logback-classic:1.2.3'

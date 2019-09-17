@@ -1,7 +1,7 @@
 dependencies {
     testImplementation project(":core")
     testImplementation project(":test-base")
-    testImplementation libPostgresEmbedded
+    testRuntime libTestcontainersPostgres
     testRuntime libPostgresJdbc
     testRuntime libLogback
 
@@ -16,5 +16,6 @@ dependencies {
 }
 
 test {
+    testLogging.showStandardStreams = true
     testClassesDirs = project(':test-base').sourceSets.main.output.classesDirs
 }

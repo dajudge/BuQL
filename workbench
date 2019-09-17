@@ -17,9 +17,9 @@ else
 fi
 
 if [ ! -z "$CI_PROJECT_DIR" ]; then
-    CONTAINER_OPTS="-v /root:/root -v /${CI_PROJECT_DIR}:/${CI_PROJECT_DIR} -w $CI_PROJECT_DIR"
+    CONTAINER_OPTS="-v /root:/root -v /${CI_PROJECT_DIR}:/${CI_PROJECT_DIR}"
 else
-    CONTAINER_OPTS="-e USER=$USER -v $HOME:$HOME -u $(id -u):$(id -g) -w $DIR -it"
+    CONTAINER_OPTS="-v $HOME:$HOME -it"
 fi
 
 docker run --rm \
@@ -28,5 +28,6 @@ docker run --rm \
     -e no_proxy="$no_proxy" \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     --net host \
-    $CONTAINER_OPTS $IMG $CMD
+    $CONTAINER_OPTS $IMG sudo -u ${USER} -E sh -c "cd $DIR; HOME=$HOME $CMD"
