@@ -45,7 +45,7 @@ public interface PersonRepository {
 }
 
 // In your business logic:
-PersonRepository repo = buql.compile(PersonRepository.class);
+PersonRepository repo = buql.up(PersonRepository.class);
 Map<String Long> ids = new HashMap<>();
 ids.put("ID0", 42);
 ids.put("ID1", 7);
