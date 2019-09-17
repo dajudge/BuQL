@@ -4,15 +4,6 @@ dependencies {
     testRuntime libTestcontainersPostgres
     testRuntime libPostgresJdbc
     testRuntime libLogback
-
-    testRuntime(libFlapdoodle) {
-        because 'the version coming with postgres embedded does not work with java 11'
-        force = true
-    }
-    testRuntime(libCommonsIO) {
-        because "the most recent flapdoodle requires a more recent commons IO version"
-        force = true
-    }
 }
 
 test {

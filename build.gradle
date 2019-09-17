@@ -15,8 +15,6 @@ ext {
     libJUnit = 'junit:junit:4.12'
     libSlf4j = 'org.slf4j:slf4j-api:1.7.28'
     libLogback = 'ch.qos.logback:logback-classic:1.2.3'
-    libFlapdoodle = 'de.flapdoodle.embed:de.flapdoodle.embed.process:2.1.2'
-    libCommonsIO = 'commons-io:commons-io:2.6'
 }
 
 subprojects {
