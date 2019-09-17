@@ -33,7 +33,7 @@ public class BooleanOperatorWrapper implements OperandAccessor {
         return Stream.of(bean.getPropertyDescriptors())
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
-                .filter(it -> it.getReadMethod().getAnnotation(Transient.class) != null)
+                .filter(it -> it.getReadMethod().getAnnotation(Transient.class) == null)
                 .map(p -> new QueryTypeWrapper(p.getPropertyType(), o -> read(o, p)))
                 .collect(Collectors.toList());
     }

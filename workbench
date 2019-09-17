@@ -3,7 +3,12 @@
 set -e
 
 DIR=$(dirname "$(readlink -f "$0")")
-IMG=$(docker build -q $DIR/.workbench)
+IMG=$(docker build \
+    --build-arg http_proxy="$http_proxy" \
+    --build-arg https_proxy="$https_proxy" \
+    --build-arg no_proxy="$no_proxy" \
+    -q $DIR/.workbench
+)
 
 if [ "$#" -eq 0 ]; then
     CMD=bash
@@ -18,8 +23,10 @@ else
 fi
 
 docker run --rm \
+    -e http_proxy="$http_proxy" \
+    -e https_proxy="$https_proxy" \
+    -e no_proxy="$no_proxy" \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
-    -e WB_GROUPS="$(groups)" \
     --net host \
     $CONTAINER_OPTS $IMG $CMD

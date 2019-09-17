@@ -18,12 +18,12 @@ public abstract class BaseDialect implements Dialect {
 
     @Override
     public String and(final ProjectionSources sources, final AndPredicate predicate) {
-        return booleanOperator(sources, predicate, " AND ");
+        return booleanOperator(sources, predicate, "AND");
     }
 
     @Override
     public String or(final ProjectionSources sources, final OrPredicate predicate) {
-        return booleanOperator(sources, predicate, " OR ");
+        return booleanOperator(sources, predicate, "OR");
     }
 
     private String booleanOperator(final ProjectionSources sources, final BooleanOperation predicate, final String op) {
