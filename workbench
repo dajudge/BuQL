@@ -4,7 +4,12 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-IMG=amazoncorretto:11.0.4
+IMG=$(docker build \
+    --build-arg http_proxy="$http_proxy" \
+    --build-arg https_proxy="$https_proxy" \
+    --build-arg no_proxy="$no_proxy" \
+    -q $DIR/.workbench
+)
 
 if [[ -z "$@" ]]; then
     CMD=bash
@@ -13,6 +18,9 @@ else
 fi
 
 docker run --rm \
+    -e http_proxy="$http_proxy" \
+    -e https_proxy="$https_proxy" \
+    -e no_proxy="$no_proxy" \
     -v /etc/passwd:/etc/passwd \
     -v /etc/group:/etc/group \
     -v $HOME:$HOME \
