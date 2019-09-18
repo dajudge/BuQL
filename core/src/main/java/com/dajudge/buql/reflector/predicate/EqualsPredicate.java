@@ -13,7 +13,7 @@ public class EqualsPredicate implements ReflectorPredicate {
 
     @Override
     public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
-        final ReflectorExpression left = new DatabaseFieldExpecttion(fieldName);
+        final ReflectorExpression left = new DatabaseFieldExpression(fieldName);
         final ReflectorExpression right = new ParameterExpression(read);
         return visitor.eq(left, right);
     }

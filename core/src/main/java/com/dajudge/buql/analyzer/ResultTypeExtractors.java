@@ -12,11 +12,11 @@ final class ResultTypeExtractors {
     }
 
     static Optional<Type> extractToComplexManyMap(final Method method) {
-        return extractToManyMap(method, isComplexClass());
+        return extractToManyMap(method, isComplexType());
     }
 
     static Optional<Type> extractToComplexUniqueMap(final Method method) {
-        return extractToUniqueMap(method, isComplexClass());
+        return extractToUniqueMap(method, isComplexType());
     }
 
     private static Optional<Type> extractToUniqueMap(final Method method, final Predicate<Type> resultTypePredicate) {

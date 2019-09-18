@@ -12,7 +12,11 @@ final class QueryTypeExtractors {
     }
 
     static Optional<Type> extractFromComplexBulkMap(final Method method) {
-        return extractFromBulkMap(method, isComplexClass());
+        return extractFromBulkMap(method, isComplexType());
+    }
+
+    static Optional<Type> extractFromPrimitiveBulkMap(final Method method) {
+        return extractFromBulkMap(method, isPrimitiveType());
     }
 
     private static Optional<Type> extractFromBulkMap(final Method method, final Predicate<Type> queryTypePredicate) {

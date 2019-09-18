@@ -20,6 +20,16 @@ public class MethodSelectModelFactory {
     ) {
         final ReflectorPredicate predicate = new QueryTypeWrapper(queryType, o -> o)
                 .visit(new ReflectorPredicateVisitor());
+        return createSelectModel(tableName, predicate, resultType, resultFieldAnalyzer, postProcessor);
+    }
+
+    public static <Q, R> MethodSelectModel<Q, R> createSelectModel(
+            final String tableName,
+            final ReflectorPredicate predicate,
+            final Class<R> resultType,
+            final Function<Class<R>, List<ResultField<R>>> resultFieldAnalyzer,
+            final Function<Map<String, List<R>>, ?> postProcessor
+    ) {
         final List<ResultField<R>> resultFields = resultFieldAnalyzer.apply(resultType);
         final Supplier<R> factory = () -> factory(resultType);
         return new MethodSelectModel<>(predicate, tableName, resultFields, factory, postProcessor);

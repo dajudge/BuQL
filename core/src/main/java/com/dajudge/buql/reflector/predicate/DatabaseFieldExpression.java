@@ -1,9 +1,9 @@
 package com.dajudge.buql.reflector.predicate;
 
-public class DatabaseFieldExpecttion implements ReflectorExpression {
+public class DatabaseFieldExpression implements ReflectorExpression {
     private final String fieldName;
 
-    public DatabaseFieldExpecttion(final String fieldName) {
+    public DatabaseFieldExpression(final String fieldName) {
         this.fieldName = fieldName;
     }
 

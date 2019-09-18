@@ -83,10 +83,6 @@ public class MethodSelectModelTest {
         }
     }
 
-    interface TestQueryInterface {
-        Map<String, List<TestResultType>> findBy(final Map<String, OrFilter> predicates);
-    }
-
     @Test
     public void play() {
         final String tableName = "myTable";

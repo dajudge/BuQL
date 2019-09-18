@@ -13,7 +13,7 @@ import static com.dajudge.buql.analyzer.ResultTypeExtractors.extractToComplexMan
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
 
-public class BulkToComplexManyAnalyzer implements Analyzer {
+public class ComplexBulkToComplexManyAnalyzer implements Analyzer {
     @Override
     public Optional<ReflectSelectQuery<?, ?>> convert(final String tableName, final Method method) {
         final Optional<Type> queryType = extractFromComplexBulkMap(method);

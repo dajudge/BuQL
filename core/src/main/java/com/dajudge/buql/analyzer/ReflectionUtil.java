@@ -72,7 +72,7 @@ final class ReflectionUtil {
         return type -> type instanceof Class;
     }
 
-    static Predicate<Type> isComplexClass() {
+    static Predicate<Type> isComplexType() {
         return isClass().and(isPrimitiveType().negate());
     }
 
