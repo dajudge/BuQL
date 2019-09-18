@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public class ReflectorPredicateVisitor implements QueryTypePredicateVisitor<ReflectorPredicate> {
+public class ComplexQueryTypePredicateVisitor implements QueryTypePredicateVisitor<ReflectorPredicate> {
     @Override
     public ReflectorPredicate booleanTypeOperator(
             final BooleanOperationType booleanOperator,

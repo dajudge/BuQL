@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer;
+package com.dajudge.buql.analyzer.typeextractors;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

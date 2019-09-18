@@ -1,9 +1,9 @@
 package com.dajudge.buql;
 
-import com.dajudge.buql.analyzer.Analyzer;
-import com.dajudge.buql.analyzer.ComplexBulkToComplexManyAnalyzer;
-import com.dajudge.buql.analyzer.ComplexBulkToComplexUniqueAnalyzer;
-import com.dajudge.buql.analyzer.PrimitiveBulkToComplexUniqueAnalyzer;
+import com.dajudge.buql.analyzer.analyzers.Analyzer;
+import com.dajudge.buql.analyzer.analyzers.ComplexBulkToComplexManySelectAnalyzer;
+import com.dajudge.buql.analyzer.analyzers.ComplexBulkToComplexUniqueSelectAnalyzer;
+import com.dajudge.buql.analyzer.analyzers.PrimitiveBulkToComplexUniqueSelectAnalyzer;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
@@ -22,9 +22,9 @@ import static java.util.stream.Collectors.toList;
 
 public class BuQL {
     private static final Collection<Analyzer> CONVERTERS = asList(
-            new ComplexBulkToComplexManyAnalyzer(),
-            new ComplexBulkToComplexUniqueAnalyzer(),
-            new PrimitiveBulkToComplexUniqueAnalyzer()
+            new ComplexBulkToComplexManySelectAnalyzer(),
+            new ComplexBulkToComplexUniqueSelectAnalyzer(),
+            new PrimitiveBulkToComplexUniqueSelectAnalyzer()
     );
     private final Dialect dialect;
     private final DatabaseEngine engine;

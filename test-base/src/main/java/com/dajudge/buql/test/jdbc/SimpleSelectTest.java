@@ -4,6 +4,9 @@ import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
 import com.dajudge.buql.reflector.model.ResultField;
+import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
+import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
+import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -23,13 +26,9 @@ public class SimpleSelectTest extends DatabaseTest {
         final Function<Map<String, List<FullResultObject>>, ? extends Object> postProcessor = Function.identity();
         final Function<Class<FullResultObject>, List<ResultField<FullResultObject>>> resultFieldsAnalyzer =
                 ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer;
-        final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(
-                "mytable",
-                queryType,
-                resultType,
-                resultFieldsAnalyzer,
-                postProcessor
-        );
+        final ReflectorPredicate predicate = new QueryTypeWrapper(queryType, o -> o)
+                .visit(new ComplexQueryTypePredicateVisitor());
+        final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel("mytable", predicate, resultType, resultFieldsAnalyzer, postProcessor);
         final ReflectSelectQuery<SimpleQueryObject, FullResultObject> query = translateMethodModelToQuery(model);
         final Map<String, SimpleQueryObject> params = new HashMap<String, SimpleQueryObject>() {{
             put("ID0", new SimpleQueryObject(42));

@@ -6,6 +6,9 @@ import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.annotations.BooleanOperator;
+import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
+import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
+import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -13,10 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer.createComplexResultFieldsAnalyzer;
 import static com.dajudge.buql.reflector.annotations.BooleanOperationType.OR;
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
-import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
 import static java.util.Arrays.asList;
 
 public class MethodSelectModelTest {
@@ -86,13 +87,9 @@ public class MethodSelectModelTest {
     @Test
     public void play() {
         final String tableName = "myTable";
-        final MethodSelectModel model = createSelectModel(
-                tableName,
-                OrFilter.class,
-                TestResultType.class,
-                ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer,
-                Function.identity()
-        );
+        final ReflectorPredicate predicate = new QueryTypeWrapper(OrFilter.class, o -> o)
+                .visit(new ComplexQueryTypePredicateVisitor());
+        final MethodSelectModel model = MethodSelectModelFactory.<OrFilter, TestResultType>createSelectModel(tableName, predicate, TestResultType.class, ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer, Function.identity());
         final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
             put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
         }};

@@ -1,21 +1,21 @@
-package com.dajudge.buql.analyzer;
+package com.dajudge.buql.analyzer.typeextractors;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.dajudge.buql.analyzer.ReflectionUtil.*;
+import static com.dajudge.buql.analyzer.typeextractors.ReflectionUtil.*;
 
-final class ResultTypeExtractors {
+public final class ResultTypeExtractors {
     private ResultTypeExtractors() {
     }
 
-    static Optional<Type> extractToComplexManyMap(final Method method) {
+    public static Optional<Type> extractToComplexManyMap(final Method method) {
         return extractToManyMap(method, isComplexType());
     }
 
-    static Optional<Type> extractToComplexUniqueMap(final Method method) {
+    public static Optional<Type> extractToComplexUniqueMap(final Method method) {
         return extractToUniqueMap(method, isComplexType());
     }
 

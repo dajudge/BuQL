@@ -55,7 +55,6 @@ public class SimpleExampleTest extends BuqlTest {
         assertEquals("v0", result.get("ID0").get(0).getStringValue());
     }
 
-
     @Test
     public void complex_bulk_to_complex_unique() {
         final Map<String, FullResultObject> result = repository.getByThing1(COMPLEX_PARAMS_ONE_RESULT);
