@@ -9,10 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ReflectSelectQuery<Q, R> {
     private static final Logger LOG = LoggerFactory.getLogger(ReflectSelectQuery.class);
+
+    public Object postProcess(final Map<String, List<R>> result) {
+        return postProcessor.apply(result);
+    }
 
     public interface Callback<R> {
         void onResult(final String id, final R value);
@@ -24,13 +30,16 @@ public class ReflectSelectQuery<Q, R> {
 
     private final SelectQueryModel<Map<String, Q>> queryModel;
     private final ResultMapper<R> resultMapper;
+    private final Function<Map<String, List<R>>, ? extends Object> postProcessor;
 
     public ReflectSelectQuery(
             final SelectQueryModel<Map<String, Q>> query,
-            final ResultMapper<R> resultMapper
+            final ResultMapper<R> resultMapper,
+            final Function<Map<String, List<R>>, ? extends Object> postProcessor
     ) {
         this.queryModel = query;
         this.resultMapper = resultMapper;
+        this.postProcessor = postProcessor;
     }
 
     public void execute(

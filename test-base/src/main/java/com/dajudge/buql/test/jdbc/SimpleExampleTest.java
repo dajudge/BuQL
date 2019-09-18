@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
@@ -14,6 +15,8 @@ public class SimpleExampleTest extends BuqlTest {
     @Table("mytable")
     interface SomeObjectRepository {
         Map<String, List<FullResultObject>> findByThing1(Map<String, SimpleQueryObject> query);
+
+        Map<String, FullResultObject> getByThing1(Map<String, SimpleQueryObject> query);
     }
 
     @Test
@@ -34,6 +37,26 @@ public class SimpleExampleTest extends BuqlTest {
         assertNotNull(result.get("ID0"));
         assertEquals(1, result.get("ID0").size());
         assertEquals("v0", result.get("ID0").get(0).getStringValue());
+    }
+
+
+    @Test
+    public void translates_to_unique_result() {
+        // Create the BuQL backed repository instance
+        final SomeObjectRepository repository = buql.up(SomeObjectRepository.class);
+
+        // Defined the query parameters
+        final Map<String, SimpleQueryObject> params = new HashMap<String, SimpleQueryObject>() {{
+            put("ID0", new SimpleQueryObject(42));
+        }};
+
+        // Execute the query
+        final Map<String, FullResultObject> result = repository.getByThing1(params);
+
+        // Let's see it!
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals("v0", result.get("ID0").getStringValue());
     }
 
     @Test

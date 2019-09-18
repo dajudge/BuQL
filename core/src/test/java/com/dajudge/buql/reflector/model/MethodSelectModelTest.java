@@ -1,5 +1,6 @@
 package com.dajudge.buql.reflector.model;
 
+import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
@@ -10,9 +11,12 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
+import static com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer.createComplexResultFieldsAnalyzer;
 import static com.dajudge.buql.reflector.annotations.BooleanOperationType.OR;
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
+import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
 import static java.util.Arrays.asList;
 
 public class MethodSelectModelTest {
@@ -60,7 +64,7 @@ public class MethodSelectModelTest {
         }
     }
 
-    static class TestResultType {
+    public static class TestResultType {
         private String resultString;
 
         public String getResultString() {
@@ -86,7 +90,13 @@ public class MethodSelectModelTest {
     @Test
     public void play() {
         final String tableName = "myTable";
-        final MethodSelectModel model = MethodSelectModelFactory.createSelectModel(tableName, OrFilter.class, TestResultType.class);
+        final MethodSelectModel model = createSelectModel(
+                tableName,
+                OrFilter.class,
+                TestResultType.class,
+                ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer,
+                Function.identity()
+        );
         final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
             put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
         }};
@@ -101,12 +111,9 @@ public class MethodSelectModelTest {
                     put("resultString", "lolcats123");
                 }});
                 results.forEach(row -> {
-                    cb.onRow(new DatabaseResultCallback.ResultRow() {
-                        @Override
-                        public Object getObject(final String colName) {
-                            System.out.println(colName);
-                            return row.get(colName);
-                        }
+                    cb.onRow(colName -> {
+                        System.out.println(colName);
+                        return row.get(colName);
                     });
                 });
                 cb.done();

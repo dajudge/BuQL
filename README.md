@@ -37,11 +37,11 @@ public interface PersonRepository {
     
     // The is a bulk data access method. The Strings in the Map types 
     // correlate the returned results to the query objects you passed in.
-    Map<String, Person> findById(Map<String, Long> ids);
+    Map<String, Person> getById(Map<String, Long> ids);
     
     // Queries can also be more complex objects. Even sophisticated
     // hierarchical predicates can be formulated.
-    Map<String, Person> findByFilter(Map<String, ComplexPersonFilter> ids);
+    Map<String, List<Person>> findByFilter(Map<String, ComplexPersonFilter> ids);
 }
 
 // In your business logic:
@@ -50,6 +50,6 @@ Map<String Long> ids = new HashMap<>();
 ids.put("ID0", 42);
 ids.put("ID1", 7);
 ids.put("ID2", 10);
-Map<String, Person> result = repo.findById(ids);
+Map<String, Person> result = repo.getById(ids);
 System.out.println("Hello, 42. Your name is: " + result.get("ID0").getFirstName());
 ``` 

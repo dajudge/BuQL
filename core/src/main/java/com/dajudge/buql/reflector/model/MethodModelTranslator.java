@@ -64,7 +64,7 @@ public final class MethodModelTranslator {
         final Map<String, BiConsumer<R, Object>> setters = projectionColumns.stream()
                 .collect(toMap(it -> it.label, it -> it.setter));
         final ResultMapper<R> resultMapper = new ResultMapper<>(factory, setters, ROW_ID_LABEL);
-        return new ReflectSelectQuery<>(queryModel, resultMapper);
+        return new ReflectSelectQuery<>(queryModel, resultMapper, model.getPostProcessor());
     }
 
     private static List<String> getFilterColumns(final FilterFieldsMapping filterFieldsMapping) {

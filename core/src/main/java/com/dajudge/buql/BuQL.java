@@ -1,11 +1,11 @@
 package com.dajudge.buql;
 
 import com.dajudge.buql.analyzer.Analyzer;
-import com.dajudge.buql.analyzer.BulkToManyAnalyzer;
+import com.dajudge.buql.analyzer.BulkToComplexManyAnalyzer;
+import com.dajudge.buql.analyzer.BulkToComplexUniqueAnalyzer;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
-import com.dajudge.buql.reflector.ReflectSelectQuery.Callback;
 import com.dajudge.buql.reflector.annotations.Table;
 import com.dajudge.buql.util.CollectorCallback;
 
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 
 public class BuQL {
     private static final Collection<Analyzer> CONVERTERS = asList(
-            new BulkToManyAnalyzer()
+            new BulkToComplexManyAnalyzer(), new BulkToComplexUniqueAnalyzer()
     );
     private final Dialect dialect;
     private final DatabaseEngine engine;
@@ -47,21 +47,21 @@ public class BuQL {
     }
 
     private InvocationHandler createInvocationHandler(
-            final Function<Method, ReflectSelectQuery<?, ?>> compiler
+            final Function<Method, ReflectSelectQuery<?, ?>> compilerFactory
     ) {
-        return (o, method, objects) -> invocationHandler(compiler::apply, method, objects);
+        return (o, method, objects) -> invocationHandler(compilerFactory::apply, method, objects);
     }
 
-    private <Q, R> Map<String, List<R>> invocationHandler(
-            final Function<Method, ReflectSelectQuery<Q, R>> compiler,
+    private <Q, R> Object invocationHandler(
+            final Function<Method, ReflectSelectQuery<Q, R>> compilerFactory,
             final Method method,
             final Object[] objects
     ) {
-        final ReflectSelectQuery<Q, R> query = getCachedOrNewQuery(compiler, method);
+        final ReflectSelectQuery<Q, R> query = getCachedOrNewQuery(compilerFactory, method);
         final Map<String, Q> params = (Map<String, Q>) objects[0];
         final CollectorCallback<R> cb = new CollectorCallback<>(params.keySet());
         query.execute(dialect, engine, params, cb);
-        return cb.getResult();
+        return query.postProcess(cb.getResult());
     }
 
     private <Q, R> ReflectSelectQuery<Q, R> getCachedOrNewQuery(
@@ -73,16 +73,18 @@ public class BuQL {
     }
 
     private ReflectSelectQuery<?, ?> compile(final String tableName, final Method method) {
-        final List<Optional<ReflectSelectQuery<?, ?>>> candidates = CONVERTERS.stream()
+        final List<? extends ReflectSelectQuery<?, ?>> candidates = CONVERTERS.stream()
                 .map(c -> c.convert(tableName, method))
                 .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(toList());
         if (candidates.size() > 1) {
             throw new IllegalArgumentException("Ambiguous compilation strategies for " + method);
         }
-        return candidates.get(0).orElseThrow(() ->
-                new IllegalArgumentException("Don't know how to compile " + method)
-        );
+        if (candidates.isEmpty()) {
+            throw new IllegalArgumentException("Don't know how to compile " + method);
+        }
+        return candidates.get(0);
     }
 
 }

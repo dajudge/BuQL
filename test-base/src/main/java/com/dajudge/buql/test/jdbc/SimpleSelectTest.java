@@ -1,11 +1,15 @@
 package com.dajudge.buql.test.jdbc;
 
+import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
+import com.dajudge.buql.reflector.model.ResultField;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
@@ -14,10 +18,17 @@ public class SimpleSelectTest extends DatabaseTest {
 
     @Test
     public void executesQuery() {
+        final Class<SimpleQueryObject> queryType = SimpleQueryObject.class;
+        final Class<FullResultObject> resultType = FullResultObject.class;
+        final Function<Map<String, List<FullResultObject>>, ? extends Object> postProcessor = Function.identity();
+        final Function<Class<FullResultObject>, List<ResultField<FullResultObject>>> resultFieldsAnalyzer =
+                ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer;
         final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(
                 "mytable",
-                SimpleQueryObject.class,
-                FullResultObject.class
+                queryType,
+                resultType,
+                resultFieldsAnalyzer,
+                postProcessor
         );
         final ReflectSelectQuery<SimpleQueryObject, FullResultObject> query = translateMethodModelToQuery(model);
         final Map<String, SimpleQueryObject> params = new HashMap<String, SimpleQueryObject>() {{
