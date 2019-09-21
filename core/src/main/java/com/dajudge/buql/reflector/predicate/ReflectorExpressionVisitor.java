@@ -5,5 +5,5 @@ import java.util.function.Function;
 public interface ReflectorExpressionVisitor<T> {
     T parameter(Function<Object, Object> read);
 
-    T databaseField(String fieldName);
+    T databaseField(String colName);
 }

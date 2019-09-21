@@ -18,6 +18,12 @@ import static java.util.Collections.emptyList;
 import static java.util.ServiceLoader.load;
 
 public abstract class DatabaseTest {
+    protected static final DefaultDatabaseResultCallback FAIL_ON_ERROR = new DefaultDatabaseResultCallback() {
+        @Override
+        public void onError(final SQLException e) {
+            throw new RuntimeException("Failed to execute setup SQL", e);
+        }
+    };
     private Connection connection;
     protected JdbcDatabaseEngine engine;
     protected Dialect dialect;
@@ -32,16 +38,14 @@ public abstract class DatabaseTest {
         dialect = testEnvironment.getDialect();
         connection.setAutoCommit(false);
         engine = new JdbcDatabaseEngine(connectionConsumer -> connectionConsumer.accept(connection));
-        final DefaultDatabaseResultCallback failOnError = new DefaultDatabaseResultCallback() {
-            @Override
-            public void onError(final SQLException e) {
-                throw new RuntimeException("Failed to execute setup SQL", e);
-            }
-        };
+        setupTestData();
+    }
+
+    protected void setupTestData() {
         engine.executeStatement(
                 "CREATE TABLE mytable(pk BIGINT, stringValue VARCHAR(128), longValue BIGINT, PRIMARY KEY(pk))",
                 emptyList(),
-                failOnError
+                FAIL_ON_ERROR
         );
         asList(
                 asList(0, "v0", 42),
@@ -49,7 +53,7 @@ public abstract class DatabaseTest {
         ).forEach(params -> engine.executeStatement(
                 "INSERT INTO mytable(pk, stringValue, longValue) VALUES (?, ?, ?)",
                 params,
-                failOnError
+                FAIL_ON_ERROR
         ));
     }
 

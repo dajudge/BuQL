@@ -1,7 +1,10 @@
 package com.dajudge.buql.reflector.model.visitor;
 
+import com.dajudge.buql.reflector.annotations.Column;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class FieldPredicate implements OperandWrapper {
@@ -18,7 +21,10 @@ public abstract class FieldPredicate implements OperandWrapper {
 
     @Override
     public <T> T visit(final QueryTypePredicateVisitor<T> visitor) {
-        return visit(visitor, prop.getName(), this::read);
+        final String name = Optional.ofNullable(prop.getReadMethod().getAnnotation(Column.class))
+                .map(Column::value)
+                .orElse(prop.getName());
+        return visit(visitor, name, this::read);
     }
 
     protected abstract <T> T visit(

@@ -20,7 +20,7 @@ public class QueryExpressionVisitor implements ReflectorExpressionVisitor<QueryE
     }
 
     @Override
-    public QueryExpression databaseField(final String fieldName) {
-        return new DataColExpression(fieldName);
+    public QueryExpression databaseField(final String colName) {
+        return new DataColExpression(colName);
     }
 }

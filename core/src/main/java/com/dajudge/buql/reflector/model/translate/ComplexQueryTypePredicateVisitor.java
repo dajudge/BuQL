@@ -11,8 +11,6 @@ import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.EQUALS;
-import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.LIKE;
 import static java.util.stream.Collectors.toList;
 
 public class ComplexQueryTypePredicateVisitor implements QueryTypePredicateVisitor<ReflectorPredicate> {
@@ -35,7 +33,12 @@ public class ComplexQueryTypePredicateVisitor implements QueryTypePredicateVisit
     }
 
     @Override
-    public ReflectorPredicate compare(final String fieldName, final Function<Object, Object> read, final ReflectorCompareOperator operator) {
-        return new DatabaseFieldPredicate(fieldName, read, operator);
+    public ReflectorPredicate compare(
+            final String colName,
+            final Function<Object, Object> read,
+            final ReflectorCompareOperator operator,
+            final Function<Object, Object> transform
+    ) {
+        return new DatabaseFieldPredicate(colName, read, operator, transform);
     }
 }

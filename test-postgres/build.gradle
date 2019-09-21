@@ -1,6 +1,8 @@
 dependencies {
     testImplementation project(":core")
     testImplementation project(":test-base")
+    testImplementation project(":postgis")
+    testImplementation libJUnit
     testRuntime libTestcontainersPostgres
     testRuntime libPostgresJdbc
     testRuntime libLogback

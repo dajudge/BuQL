@@ -9,5 +9,10 @@ import java.util.function.Function;
 public interface QueryTypePredicateVisitor<T> {
     T booleanTypeOperator(BooleanOperationType booleanOperator, OperandAccessor booleanOperatorWrapper);
 
-    T compare(String fieldName, Function<Object, Object> read, ReflectorCompareOperator operator);
+    T compare(
+            String fieldName,
+            Function<Object, Object> read,
+            ReflectorCompareOperator operator,
+            Function<Object, Object> transform
+    );
 }
