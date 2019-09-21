@@ -1,6 +1,6 @@
-package com.dajudge.buql.test.matcher;
+package com.dajudge.buql.test.jdbc.matcher;
 
-import com.dajudge.buql.test.matcher.QueryResultAssertions.RowMatcher;
+import com.dajudge.buql.test.jdbc.matcher.QueryResultAssertions.RowMatcher;
 
 import java.util.Map;
 

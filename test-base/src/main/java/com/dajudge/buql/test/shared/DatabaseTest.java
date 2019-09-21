@@ -1,10 +1,10 @@
-package com.dajudge.buql.test.jdbc;
+package com.dajudge.buql.test.shared;
 
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DefaultDatabaseResultCallback;
 import com.dajudge.buql.query.engine.jdbc.JdbcDatabaseEngine;
 import com.dajudge.buql.test.TestEnvironment;
-import com.dajudge.buql.test.h2.H2TestEnvironment;
+import com.dajudge.buql.test.shared.h2.H2TestEnvironment;
 import org.junit.After;
 import org.junit.Before;
 
@@ -19,8 +19,8 @@ import static java.util.ServiceLoader.load;
 
 public abstract class DatabaseTest {
     private Connection connection;
-    JdbcDatabaseEngine engine;
-    Dialect dialect;
+    protected JdbcDatabaseEngine engine;
+    protected Dialect dialect;
 
     @Before
     public void setupDatabase() throws SQLException {

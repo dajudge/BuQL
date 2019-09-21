@@ -1,6 +1,9 @@
-package com.dajudge.buql.test.jdbc;
+package com.dajudge.buql.test.analyzers;
 
 import com.dajudge.buql.reflector.annotations.Table;
+import com.dajudge.buql.test.shared.BuqlTest;
+import com.dajudge.buql.test.shared.model.FullResultObject;
+import com.dajudge.buql.test.shared.model.SimpleQueryObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class SimpleExampleTest extends BuqlTest {
+public class AnalyzersTest extends BuqlTest {
     private static final HashMap<String, SimpleQueryObject> COMPLEX_PARAMS_ONE_RESULT = new HashMap<String, SimpleQueryObject>() {{
         put("ID0", new SimpleQueryObject(42));
     }};
@@ -20,9 +23,7 @@ public class SimpleExampleTest extends BuqlTest {
     private static final HashMap<String, Long> PRIMITIVE_PARAMS_ONE_RESULT = new HashMap<String, Long>() {{
         put("ID0", 42l);
     }};
-    private static final Map<String, PatternQueryObject> PATTERN_PARAMS = new HashMap<String, PatternQueryObject>() {{
-        put("ID0", new PatternQueryObject("v%"));
-    }};
+
     private SomeObjectRepository repository;
 
     @Table("mytable")
@@ -33,7 +34,7 @@ public class SimpleExampleTest extends BuqlTest {
 
         Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
 
-        Map<String, List<String>> findStringValueByPattern(Map<String, PatternQueryObject> query);
+        Map<String, List<String>> findStringValueByPattern(Map<String, SimpleQueryObject> query);
 
         Map<String, String> getStringValueByLongValue(Map<String, Long> query);
     }
@@ -44,14 +45,13 @@ public class SimpleExampleTest extends BuqlTest {
     }
 
     @Test
-    public void like_query() {
-        final Map<String, List<String>> result = repository.findStringValueByPattern(PATTERN_PARAMS);
+    public void bulk_complex_to_many_primitive() {
+        final Map<String, List<String>> result = repository.findStringValueByPattern(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
-        assertEquals(2, result.get("ID0").size());
-        assertTrue(result.get("ID0").contains("v0"));
-        assertTrue(result.get("ID0").contains("v1"));
+        assertEquals(1, result.get("ID0").size());
+        assertNotNull("v0", result.get("ID0").get(0));
     }
 
     @Test

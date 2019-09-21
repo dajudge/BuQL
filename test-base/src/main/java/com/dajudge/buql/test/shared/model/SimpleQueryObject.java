@@ -1,4 +1,4 @@
-package com.dajudge.buql.test.jdbc;
+package com.dajudge.buql.test.shared.model;
 
 import com.dajudge.buql.reflector.annotations.Transient;
 

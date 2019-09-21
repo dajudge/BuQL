@@ -1,4 +1,4 @@
-package com.dajudge.buql.test.matcher;
+package com.dajudge.buql.test.jdbc.matcher;
 
 import java.util.HashMap;
 import java.util.List;

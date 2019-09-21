@@ -1,4 +1,4 @@
-package com.dajudge.buql.test.matcher;
+package com.dajudge.buql.test.jdbc.matcher;
 
 import static org.junit.Assert.*;
 

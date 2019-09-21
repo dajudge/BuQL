@@ -7,6 +7,9 @@ import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel
 import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
+import com.dajudge.buql.test.shared.DatabaseTest;
+import com.dajudge.buql.test.shared.model.FullResultObject;
+import com.dajudge.buql.test.shared.model.SimpleQueryObject;
 import org.junit.Test;
 
 import java.util.HashMap;

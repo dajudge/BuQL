@@ -2,12 +2,12 @@ package com.dajudge.buql.test.jdbc;
 
 import com.dajudge.buql.query.engine.QueryExecutor;
 import com.dajudge.buql.query.model.Query;
-import com.dajudge.buql.query.model.expression.QueryCompareOperator;
 import com.dajudge.buql.query.model.expression.QueryPredicate;
 import com.dajudge.buql.query.model.select.ProjectionColumn;
 import com.dajudge.buql.query.model.select.SelectQuery;
-import com.dajudge.buql.test.matcher.QueryResult;
-import com.dajudge.buql.test.matcher.QueryResultAssertions;
+import com.dajudge.buql.test.jdbc.matcher.QueryResult;
+import com.dajudge.buql.test.jdbc.matcher.QueryResultAssertions;
+import com.dajudge.buql.test.shared.DatabaseTest;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import static com.dajudge.buql.query.model.expression.QueryCompareOperator.EQUAL
 import static com.dajudge.buql.query.model.expression.QueryExpression.dataCol;
 import static com.dajudge.buql.query.model.expression.QueryExpression.filterCol;
 import static com.dajudge.buql.query.model.expression.QueryPredicate.*;
-import static com.dajudge.buql.test.matcher.QueryResult.into;
+import static com.dajudge.buql.test.jdbc.matcher.QueryResult.into;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
