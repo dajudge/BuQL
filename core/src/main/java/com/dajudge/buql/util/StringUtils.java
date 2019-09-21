@@ -1,5 +1,7 @@
 package com.dajudge.buql.util;
 
+import static java.util.Locale.US;
+
 public final class StringUtils {
     private StringUtils() {
 
@@ -18,5 +20,9 @@ public final class StringUtils {
 
     public static String quote(final String s) {
         return '"' + s + '"';
+    }
+
+    public static String lowercaseFirstLetter(final String fieldName) {
+        return fieldName.substring(0, 1).toLowerCase(US) + fieldName.substring(1);
     }
 }

@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer;
+package com.dajudge.buql.analyzer.predicates;
 
 import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;

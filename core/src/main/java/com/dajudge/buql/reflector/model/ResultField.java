@@ -1,24 +1,22 @@
 package com.dajudge.buql.reflector.model;
 
-import java.util.function.BiConsumer;
-
 public class ResultField<R> {
     private final String tableColumn;
-    private final BiConsumer<R, Object> setter;
+    private final String fieldName;
 
     public ResultField(
             final String tableColumn,
-            final BiConsumer<R, Object> setter
+            final String fieldName
     ) {
         this.tableColumn = tableColumn;
-        this.setter = setter;
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 
     public String getTableColumn() {
         return tableColumn;
-    }
-
-    public void set(final R object, final Object value) {
-        setter.accept(object, value);
     }
 }

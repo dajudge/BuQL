@@ -1,11 +1,13 @@
 package com.dajudge.buql.reflector.model;
 
 import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
+import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.annotations.BooleanOperator;
+import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
 import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
@@ -18,7 +20,9 @@ import java.util.function.Function;
 
 import static com.dajudge.buql.reflector.annotations.BooleanOperationType.OR;
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
+import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
 import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
 
 public class MethodSelectModelTest {
 
@@ -89,7 +93,8 @@ public class MethodSelectModelTest {
         final String tableName = "myTable";
         final ReflectorPredicate predicate = new QueryTypeWrapper(OrFilter.class, o -> o)
                 .visit(new ComplexQueryTypePredicateVisitor());
-        final MethodSelectModel model = MethodSelectModelFactory.<OrFilter, TestResultType>createSelectModel(tableName, predicate, TestResultType.class, ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer, Function.identity());
+        final ResultTypeModel<TestResultType> resultTypeModel = new ComplexResultTypeModel<>(TestResultType.class);
+        final MethodSelectModel model = createSelectModel(tableName, predicate, resultTypeModel, identity());
         final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
             put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
         }};

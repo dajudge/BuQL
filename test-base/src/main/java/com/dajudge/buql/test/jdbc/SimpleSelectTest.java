@@ -1,9 +1,9 @@
 package com.dajudge.buql.test.jdbc;
 
-import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
+import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
-import com.dajudge.buql.reflector.model.ResultField;
+import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
 import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
@@ -24,11 +24,15 @@ public class SimpleSelectTest extends DatabaseTest {
         final Class<SimpleQueryObject> queryType = SimpleQueryObject.class;
         final Class<FullResultObject> resultType = FullResultObject.class;
         final Function<Map<String, List<FullResultObject>>, ? extends Object> postProcessor = Function.identity();
-        final Function<Class<FullResultObject>, List<ResultField<FullResultObject>>> resultFieldsAnalyzer =
-                ComplexResultFieldsAnalyzer::createComplexResultFieldsAnalyzer;
         final ReflectorPredicate predicate = new QueryTypeWrapper(queryType, o -> o)
                 .visit(new ComplexQueryTypePredicateVisitor());
-        final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel("mytable", predicate, resultType, resultFieldsAnalyzer, postProcessor);
+        final ResultTypeModel<FullResultObject> resultTypeModel = new ComplexResultTypeModel<>(resultType);
+        final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(
+                "mytable",
+                predicate,
+                resultTypeModel,
+                postProcessor
+        );
         final ReflectSelectQuery<SimpleQueryObject, FullResultObject> query = translateMethodModelToQuery(model);
         final Map<String, SimpleQueryObject> params = new HashMap<String, SimpleQueryObject>() {{
             put("ID0", new SimpleQueryObject(42));

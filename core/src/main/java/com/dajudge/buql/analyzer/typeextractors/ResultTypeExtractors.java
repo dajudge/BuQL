@@ -19,6 +19,10 @@ public final class ResultTypeExtractors {
         return extractToUniqueMap(method, isComplexType());
     }
 
+    public static Optional<Type> extractToPrimitiveUniqueMap(final Method method) {
+        return extractToUniqueMap(method, isPrimitiveType());
+    }
+
     private static Optional<Type> extractToUniqueMap(final Method method, final Predicate<Type> resultTypePredicate) {
         final TypeCaptor captor = new TypeCaptor();
         final Type returnType = method.getGenericReturnType();

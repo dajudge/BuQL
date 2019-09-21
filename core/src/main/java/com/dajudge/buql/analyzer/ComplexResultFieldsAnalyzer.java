@@ -1,5 +1,6 @@
 package com.dajudge.buql.analyzer;
 
+import com.dajudge.buql.analyzer.ComplexResultTypeModel.ResultFieldModel;
 import com.dajudge.buql.reflector.annotations.Transient;
 import com.dajudge.buql.reflector.model.ResultField;
 
@@ -17,7 +18,7 @@ public class ComplexResultFieldsAnalyzer {
     private ComplexResultFieldsAnalyzer() {
     }
 
-    public static <R> List<ResultField<R>> createComplexResultFieldsAnalyzer(final Class<R> resultType) {
+    public static <R> List<ResultFieldModel<R>> createComplexResultFieldsAnalyzer(final Class<R> resultType) {
         try {
             final BeanInfo resultBean = Introspector.getBeanInfo(resultType);
             return Stream.of(resultBean.getPropertyDescriptors())
@@ -30,13 +31,22 @@ public class ComplexResultFieldsAnalyzer {
         }
     }
 
-    private static <R> ResultField<R> toResultField(final PropertyDescriptor prop) {
-        return new ResultField<>(prop.getName(), (o, v) -> {
-            try {
-                prop.getWriteMethod().invoke(o, v);
-            } catch (final IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("Failed to invoke setter " + prop.getWriteMethod(), e);
+    private static <R> ResultFieldModel<R> toResultField(final PropertyDescriptor prop) {
+        return new ResultFieldModel<R>() {
+            @Override
+            public ResultField<R> getResultField() {
+                return new ResultField<>(prop.getName(), prop.getName());
             }
-        });
+
+            @Override
+            public void setFieldValue(final R object, final Object value) {
+                try {
+                    prop.getWriteMethod().invoke(object, value);
+                } catch (final IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException("Failed to invoke setter " + prop.getWriteMethod(), e);
+                }
+            }
+        };
+
     }
 }

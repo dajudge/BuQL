@@ -1,7 +1,9 @@
 package com.dajudge.buql.analyzer.analyzers;
 
-import com.dajudge.buql.analyzer.ComplexQueryTypePredicate;
+import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.UniquePostProcessor;
+import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
+import com.dajudge.buql.reflector.model.MethodSelectModelFactory;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 
 import java.lang.reflect.Method;
@@ -10,18 +12,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromComplexBulkMap;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToComplexUniqueMap;
 
-public class ComplexBulkToComplexUniqueSelectAnalyzer extends BaseSelectAnalyzer {
+public class BulkComplexToUniqueComplexSelectAnalyzer extends BaseSelectAnalyzer {
+
+    public BulkComplexToUniqueComplexSelectAnalyzer() {
+        super(Pattern.compile("getBy[A-Z].*"));
+    }
+
     @Override
-    protected <T> Function<Map<String, List<T>>, ?> getPostProcessor() {
+    protected <T> Function<Map<String, List<T>>, ?> createPostProcessor() {
         return new UniquePostProcessor<>();
     }
 
     @Override
-    protected ReflectorPredicate toPredicate(final Method method, final Class<?> actualQueryClass) {
+    protected <R> MethodSelectModelFactory.ResultTypeModel<R> createResultFieldsModel(
+            final Class<R> clazz,
+            final Matcher methodNameMatcher
+    ) {
+        return new ComplexResultTypeModel<>(clazz);
+    }
+
+    @Override
+    protected ReflectorPredicate createPredicate(
+            final Method method,
+            final Class<?> actualQueryClass,
+            final Matcher methodNameMatcher
+    ) {
         return new ComplexQueryTypePredicate(actualQueryClass);
     }
 
@@ -33,10 +54,5 @@ public class ComplexBulkToComplexUniqueSelectAnalyzer extends BaseSelectAnalyzer
     @Override
     protected Optional<Type> extractQueryType(final Method method) {
         return extractFromComplexBulkMap(method);
-    }
-
-    @Override
-    protected boolean matchesName(final Method method) {
-        return method.getName().matches("getBy[A-Z].*");
     }
 }

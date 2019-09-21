@@ -29,6 +29,8 @@ public class SimpleExampleTest extends BuqlTest {
         Map<String, FullResultObject> getByThing1(Map<String, SimpleQueryObject> query);
 
         Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
+
+        Map<String, String> getStringValueByLongValue(Map<String, Long> query);
     }
 
     @Before
@@ -37,7 +39,7 @@ public class SimpleExampleTest extends BuqlTest {
     }
 
     @Test
-    public void primitive_bulk_to_complex_unique() {
+    public void bulk_primitive_to_unique_complex() {
         final Map<String, FullResultObject> result = repository.getByLongValue(PRIMITIVE_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
@@ -46,7 +48,7 @@ public class SimpleExampleTest extends BuqlTest {
     }
 
     @Test
-    public void complex_bulk_to_complex_many() {
+    public void bulk_complex_to_many_complex() {
         final Map<String, List<FullResultObject>> result = repository.findByThing1(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
@@ -56,12 +58,21 @@ public class SimpleExampleTest extends BuqlTest {
     }
 
     @Test
-    public void complex_bulk_to_complex_unique() {
+    public void bulk_complex_to_unique_complex() {
         final Map<String, FullResultObject> result = repository.getByThing1(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
         assertEquals("v0", result.get("ID0").getStringValue());
+    }
+
+    @Test
+    public void bulk_primitive_to_unique_primitive() {
+        final Map<String, String> result = repository.getStringValueByLongValue(PRIMITIVE_PARAMS_ONE_RESULT);
+
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals("v0", result.get("ID0"));
     }
 
     @Test

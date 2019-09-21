@@ -13,12 +13,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static com.dajudge.buql.query.model.select.ProjectionColumn.fromData;
+import static com.dajudge.buql.query.model.select.ProjectionColumn.fromFilters;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -29,20 +28,19 @@ public final class MethodModelTranslator {
     private MethodModelTranslator() {
     }
 
-    private static class ProjectionColumnWithSetter<R> {
-
+    private static class ProjectionColumnWrapper {
         private final ProjectionColumn projectionColumn;
-        private final BiConsumer<R, Object> setter;
+        private final String resultField;
         private final String label;
 
-        ProjectionColumnWithSetter(
+        ProjectionColumnWrapper(
                 final String label,
                 final ProjectionColumn projectionColumn,
-                final BiConsumer<R, Object> setter
+                final String resultField
         ) {
             this.label = label;
             this.projectionColumn = projectionColumn;
-            this.setter = setter;
+            this.resultField = resultField;
         }
     }
 
@@ -51,7 +49,7 @@ public final class MethodModelTranslator {
         final FilterFieldsMapping filterFieldsMapping = new FilterFieldsMapping();
         final QueryPredicate predicate = model.getPredicate().visit(new QueryPredicateVisitor(filterFieldsMapping));
         final List<String> filterColumns = getFilterColumns(filterFieldsMapping);
-        final List<ProjectionColumnWithSetter<R>> projectionColumns = getProjectionColumns(model);
+        final List<ProjectionColumnWrapper> projectionColumns = getProjectionColumns(model);
         final Function<Map<String, Q>, List<Object>> extractor = getFilterValuesExtractor(filterColumns, filterFieldsMapping);
         final SelectQueryModel<Map<String, Q>> queryModel = new SelectQueryModel<>(
                 predicate,
@@ -60,10 +58,14 @@ public final class MethodModelTranslator {
                 tableName,
                 extractor
         );
-        final Supplier<R> factory = model.getResultFactory();
-        final Map<String, BiConsumer<R, Object>> setters = projectionColumns.stream()
-                .collect(toMap(it -> it.label, it -> it.setter));
-        final ResultMapper<R> resultMapper = new ResultMapper<>(factory, setters, ROW_ID_LABEL);
+        final Map<String, String> colNameMappers = projectionColumns.stream()
+                .filter(it -> it.resultField != null)
+                .collect(toMap(it -> it.resultField, it -> it.label));
+        final ResultMapper<R> resultMapper = new ResultMapper<>(
+                colNameMappers::get,
+                model.getResultTypeFactory(),
+                ROW_ID_LABEL
+        );
         return new ReflectSelectQuery<>(queryModel, resultMapper, model.getPostProcessor());
     }
 
@@ -74,25 +76,21 @@ public final class MethodModelTranslator {
         ).collect(toList());
     }
 
-    private static <Q, R> List<ProjectionColumnWithSetter<R>> getProjectionColumns(final MethodSelectModel<Q, R> model) {
+    private static List<ProjectionColumnWrapper> getProjectionColumns(final MethodSelectModel<?, ?> model) {
+        return getProjectionColumns(model.getResultFields());
+    }
+
+    private static List<ProjectionColumnWrapper> getProjectionColumns(final List<? extends ResultField<?>> resultFields) {
         final AtomicInteger counter = new AtomicInteger();
-        final List<ResultField<R>> resultFields = model.getResultFields();
-        final Stream<ProjectionColumnWithSetter<R>> resultProjectionColumns = resultFields.stream()
+        final Stream<ProjectionColumnWrapper> resultProjectionColumns = resultFields.stream()
                 .map(field -> {
                     final String label = "R" + counter.getAndIncrement();
-                    return new ProjectionColumnWithSetter<>(
-                            label,
-                            fromData(field.getTableColumn(), label),
-                            field::set
-                    );
+                    return new ProjectionColumnWrapper(label, fromData(field.getTableColumn(), label), field.getFieldName());
                 });
         return Stream.concat(
-                Stream.of(new ProjectionColumnWithSetter<R>(
-                        ROW_ID_LABEL,
-                        ProjectionColumn.fromFilters(ROW_ID_COLUMN, ROW_ID_LABEL),
-                        (a, o) -> {
-                        }
-                )),
+                Stream.of(
+                        new ProjectionColumnWrapper(ROW_ID_LABEL, fromFilters(ROW_ID_COLUMN, ROW_ID_LABEL), null)
+                ),
                 resultProjectionColumns
         ).collect(toList());
     }
