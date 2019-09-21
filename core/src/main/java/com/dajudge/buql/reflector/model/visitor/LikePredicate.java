@@ -3,8 +3,9 @@ package com.dajudge.buql.reflector.model.visitor;
 import java.beans.PropertyDescriptor;
 import java.util.function.Function;
 
-public class EqualsPredicate extends FieldPredicate {
-    public EqualsPredicate(final PropertyDescriptor prop, final Function<Object, Object> parentAccessor) {
+public class LikePredicate extends FieldPredicate {
+
+    public LikePredicate(final PropertyDescriptor prop, final Function<Object, Object> parentAccessor) {
         super(prop, parentAccessor);
     }
 
@@ -14,6 +15,6 @@ public class EqualsPredicate extends FieldPredicate {
             final String fieldName,
             final Function<Object, Object> read
     ) {
-        return visitor.equals(fieldName, read);
+        return visitor.like(fieldName, read);
     }
 }

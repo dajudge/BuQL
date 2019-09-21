@@ -2,8 +2,8 @@ package com.dajudge.buql.reflector.predicate;
 
 import java.util.function.Function;
 
-public class EqualsPredicate extends DatabaseFieldPredicate {
-    public EqualsPredicate(final String fieldName, final Function<Object, Object> read) {
+public class LikePredicate extends DatabaseFieldPredicate {
+    public LikePredicate(final String fieldName, final Function<Object, Object> read) {
         super(fieldName, read);
     }
 
@@ -13,6 +13,6 @@ public class EqualsPredicate extends DatabaseFieldPredicate {
             final ReflectorExpression left,
             final ReflectorExpression right
     ) {
-        return visitor.eq(left, right);
+        return visitor.like(left, right);
     }
 }

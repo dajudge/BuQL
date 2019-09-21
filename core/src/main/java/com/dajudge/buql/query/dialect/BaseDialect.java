@@ -44,9 +44,12 @@ public abstract class BaseDialect implements Dialect {
 
     @Override
     public String eq(final ProjectionSources sources, final EqualsPredicate equalsPredicate) {
-        final String left = equalsPredicate.getLeft().toSql(sources, this);
-        final String right = equalsPredicate.getRight().toSql(sources, this);
-        return "(" + left + " = " + right + ")";
+        return binaryPredicate(sources, equalsPredicate, "=");
+    }
+
+    @Override
+    public String like(final ProjectionSources sources, final LikePredicate likePredicate) {
+        return binaryPredicate(sources, likePredicate, "LIKE");
     }
 
     @Override
@@ -57,6 +60,12 @@ public abstract class BaseDialect implements Dialect {
     @Override
     public String constTrue() {
         return "TRUE";
+    }
+
+    private String binaryPredicate(final ProjectionSources sources, final BinaryPredicate predicate, final String op) {
+        final String left = predicate.getLeft().toSql(sources, this);
+        final String right = predicate.getRight().toSql(sources, this);
+        return "(" + left + " " + op + " " + right + ")";
     }
 
     protected abstract SelectQueryWriter getSelectQueryWriter();

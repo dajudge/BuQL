@@ -19,4 +19,6 @@ public interface Dialect {
     String filterColumn(ProjectionSources sources, FilterColExpression filterColExpression);
 
     String constTrue();
+
+    String like(ProjectionSources sources, LikePredicate likePredicate);
 }

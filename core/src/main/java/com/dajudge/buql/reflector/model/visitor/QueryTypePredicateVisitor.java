@@ -8,4 +8,6 @@ public interface QueryTypePredicateVisitor<T> {
     T booleanTypeOperator(BooleanOperationType booleanOperator, OperandAccessor booleanOperatorWrapper);
 
     T equals(String fieldName, Function<Object, Object> read);
+
+    T like(String fieldName, Function<Object, Object> read);
 }

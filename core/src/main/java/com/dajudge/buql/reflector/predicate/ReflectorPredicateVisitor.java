@@ -6,4 +6,6 @@ public interface ReflectorPredicateVisitor<T> {
     T and(BooleanOperationPredicate predicate);
 
     T eq(ReflectorExpression left, ReflectorExpression right);
+
+    T like(ReflectorExpression left, ReflectorExpression right);
 }

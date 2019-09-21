@@ -20,6 +20,9 @@ public class SimpleExampleTest extends BuqlTest {
     private static final HashMap<String, Long> PRIMITIVE_PARAMS_ONE_RESULT = new HashMap<String, Long>() {{
         put("ID0", 42l);
     }};
+    private static final Map<String, PatternQueryObject> PATTERN_PARAMS = new HashMap<String, PatternQueryObject>() {{
+        put("ID0", new PatternQueryObject("v%"));
+    }};
     private SomeObjectRepository repository;
 
     @Table("mytable")
@@ -30,12 +33,25 @@ public class SimpleExampleTest extends BuqlTest {
 
         Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
 
+        Map<String, List<String>> findStringValueByPattern(Map<String, PatternQueryObject> query);
+
         Map<String, String> getStringValueByLongValue(Map<String, Long> query);
     }
 
     @Before
     public void setup() {
         repository = buql.up(SomeObjectRepository.class);
+    }
+
+    @Test
+    public void like_query() {
+        final Map<String, List<String>> result = repository.findStringValueByPattern(PATTERN_PARAMS);
+
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals(2, result.get("ID0").size());
+        assertTrue(result.get("ID0").contains("v0"));
+        assertTrue(result.get("ID0").contains("v1"));
     }
 
     @Test

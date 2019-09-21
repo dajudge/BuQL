@@ -23,6 +23,10 @@ public final class ResultTypeExtractors {
         return extractToUniqueMap(method, isPrimitiveType());
     }
 
+    public static Optional<Type> extractToPrimitiveManyMap(final Method method) {
+        return extractToManyMap(method, isPrimitiveType());
+    }
+
     private static Optional<Type> extractToUniqueMap(final Method method, final Predicate<Type> resultTypePredicate) {
         final TypeCaptor captor = new TypeCaptor();
         final Type returnType = method.getGenericReturnType();

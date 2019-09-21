@@ -1,10 +1,12 @@
 package com.dajudge.buql.reflector.model.visitor;
 
+import com.dajudge.buql.reflector.annotations.Like;
 import com.dajudge.buql.reflector.annotations.Transient;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,7 +35,14 @@ public class QueryFieldsWrapper implements OperandAccessor {
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
                 .filter(it -> it.getReadMethod().getAnnotation(Transient.class) == null)
-                .map(prop -> new EqualsPredicate(prop, parentAccessor))
+                .map(this::createPredicate)
                 .collect(toList());
+    }
+
+    private OperandWrapper createPredicate(final PropertyDescriptor prop) {
+        if (prop.getReadMethod().getAnnotation(Like.class) != null) {
+            return new LikePredicate(prop, parentAccessor);
+        }
+        return new EqualsPredicate(prop, parentAccessor);
     }
 }

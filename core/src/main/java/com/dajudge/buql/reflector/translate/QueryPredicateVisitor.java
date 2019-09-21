@@ -34,6 +34,14 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
         );
     }
 
+    @Override
+    public QueryPredicate like(final ReflectorExpression left, final ReflectorExpression right) {
+        return QueryPredicate.like(
+                left.visit(new QueryExpressionVisitor(filterFieldsMapping)),
+                right.visit(new QueryExpressionVisitor(filterFieldsMapping))
+        );
+    }
+
     private List<QueryPredicate> operandsOf(final BooleanOperationPredicate predicate) {
         return predicate.getOperands().stream()
                 .map(op -> op.visit(new QueryPredicateVisitor(filterFieldsMapping)))
