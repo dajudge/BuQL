@@ -18,7 +18,7 @@ public abstract class FieldPredicate implements OperandWrapper {
 
     @Override
     public <T> T visit(final QueryTypePredicateVisitor<T> visitor) {
-        return visitor.like(prop.getName(), this::read);
+        return visit(visitor, prop.getName(), this::read);
     }
 
     protected abstract <T> T visit(
