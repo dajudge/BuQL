@@ -14,11 +14,13 @@ public interface Dialect {
 
     String dataColumn(ProjectionSources sources, DataColExpression dataColExpression);
 
-    String eq(ProjectionSources sources, EqualsPredicate equalsPredicate);
-
     String filterColumn(ProjectionSources sources, FilterColExpression filterColExpression);
 
     String constTrue();
 
-    String like(ProjectionSources sources, LikePredicate likePredicate);
+    String compareOperator(
+            ProjectionSources sources,
+            BinaryPredicate predicate,
+            SqlCompareOperator op
+    );
 }

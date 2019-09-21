@@ -1,10 +1,8 @@
 package com.dajudge.buql.analyzer.predicates;
 
-import com.dajudge.buql.reflector.predicate.DatabaseFieldExpression;
-import com.dajudge.buql.reflector.predicate.ParameterExpression;
-import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
-import com.dajudge.buql.reflector.predicate.ReflectorPredicateVisitor;
+import com.dajudge.buql.reflector.predicate.*;
 
+import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.EQUALS;
 import static java.util.function.Function.identity;
 
 public class PrimitiveQueryTypePredicate implements ReflectorPredicate {
@@ -16,6 +14,6 @@ public class PrimitiveQueryTypePredicate implements ReflectorPredicate {
 
     @Override
     public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
-        return visitor.eq(new DatabaseFieldExpression(fieldName), new ParameterExpression(identity()));
+        return visitor.compare(new DatabaseFieldExpression(fieldName), new ParameterExpression(identity()), EQUALS);
     }
 }

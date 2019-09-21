@@ -2,6 +2,7 @@ package com.dajudge.buql.reflector.translate;
 
 import com.dajudge.buql.query.model.expression.QueryPredicate;
 import com.dajudge.buql.reflector.predicate.BooleanOperationPredicate;
+import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
 import com.dajudge.buql.reflector.predicate.ReflectorExpression;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicateVisitor;
 
@@ -27,18 +28,15 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
     }
 
     @Override
-    public QueryPredicate eq(final ReflectorExpression left, final ReflectorExpression right) {
-        return QueryPredicate.eq(
+    public QueryPredicate compare(
+            final ReflectorExpression left,
+            final ReflectorExpression right,
+            final ReflectorCompareOperator operator
+    ) {
+        return QueryPredicate.compare(
                 left.visit(new QueryExpressionVisitor(filterFieldsMapping)),
-                right.visit(new QueryExpressionVisitor(filterFieldsMapping))
-        );
-    }
-
-    @Override
-    public QueryPredicate like(final ReflectorExpression left, final ReflectorExpression right) {
-        return QueryPredicate.like(
-                left.visit(new QueryExpressionVisitor(filterFieldsMapping)),
-                right.visit(new QueryExpressionVisitor(filterFieldsMapping))
+                right.visit(new QueryExpressionVisitor(filterFieldsMapping)),
+                operator.getOperator()
         );
     }
 

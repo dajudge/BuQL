@@ -2,6 +2,7 @@ package com.dajudge.buql.reflector.model.visitor;
 
 import com.dajudge.buql.reflector.annotations.Like;
 import com.dajudge.buql.reflector.annotations.Transient;
+import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.EQUALS;
+import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.LIKE;
 import static java.util.stream.Collectors.toList;
 
 public class QueryFieldsWrapper implements OperandAccessor {
@@ -41,8 +44,8 @@ public class QueryFieldsWrapper implements OperandAccessor {
 
     private OperandWrapper createPredicate(final PropertyDescriptor prop) {
         if (prop.getReadMethod().getAnnotation(Like.class) != null) {
-            return new LikePredicate(prop, parentAccessor);
+            return new ComparisonPredicate(prop, parentAccessor, LIKE);
         }
-        return new EqualsPredicate(prop, parentAccessor);
+        return new ComparisonPredicate(prop, parentAccessor, EQUALS);
     }
 }

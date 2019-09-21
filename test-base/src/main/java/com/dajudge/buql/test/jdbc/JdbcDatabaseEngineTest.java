@@ -2,6 +2,7 @@ package com.dajudge.buql.test.jdbc;
 
 import com.dajudge.buql.query.engine.QueryExecutor;
 import com.dajudge.buql.query.model.Query;
+import com.dajudge.buql.query.model.expression.QueryCompareOperator;
 import com.dajudge.buql.query.model.expression.QueryPredicate;
 import com.dajudge.buql.query.model.select.ProjectionColumn;
 import com.dajudge.buql.query.model.select.SelectQuery;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.dajudge.buql.query.model.expression.QueryCompareOperator.EQUALS;
 import static com.dajudge.buql.query.model.expression.QueryExpression.dataCol;
 import static com.dajudge.buql.query.model.expression.QueryExpression.filterCol;
 import static com.dajudge.buql.query.model.expression.QueryPredicate.*;
@@ -54,7 +56,7 @@ public class JdbcDatabaseEngineTest extends DatabaseTest {
                 "ID1", "v2"
         );
         final List<String> filterColumns = asList("ID_LABEL", "F0");
-        final QueryPredicate predicate = eq(dataCol("stringValue"), filterCol("F0"));
+        final QueryPredicate predicate = compare(dataCol("stringValue"), filterCol("F0"), EQUALS);
         final Query query = new SelectQuery(projectionColumns, filterParameters, filterColumns, predicate, "mytable");
         assertWith(query)
                 .hasNoException()
@@ -75,7 +77,7 @@ public class JdbcDatabaseEngineTest extends DatabaseTest {
                 "v1", "ID0"
         );
         final QueryPredicate predicate = and(
-                eq(dataCol("stringValue"), filterCol("F0"))
+                compare(dataCol("stringValue"), filterCol("F0"), EQUALS)
         );
         final List<String> filterColumns = asList("F0", "ID");
         final Query query = new SelectQuery(projectionColumns, filterParameters, filterColumns, predicate, "mytable");

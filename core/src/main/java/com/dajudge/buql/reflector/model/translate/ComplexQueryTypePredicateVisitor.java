@@ -4,13 +4,15 @@ import com.dajudge.buql.reflector.annotations.BooleanOperationType;
 import com.dajudge.buql.reflector.model.visitor.OperandAccessor;
 import com.dajudge.buql.reflector.model.visitor.QueryTypePredicateVisitor;
 import com.dajudge.buql.reflector.predicate.BooleanOperationPredicate;
-import com.dajudge.buql.reflector.predicate.EqualsPredicate;
-import com.dajudge.buql.reflector.predicate.LikePredicate;
+import com.dajudge.buql.reflector.predicate.DatabaseFieldPredicate;
+import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 
 import java.util.List;
 import java.util.function.Function;
 
+import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.EQUALS;
+import static com.dajudge.buql.reflector.predicate.ReflectorCompareOperator.LIKE;
 import static java.util.stream.Collectors.toList;
 
 public class ComplexQueryTypePredicateVisitor implements QueryTypePredicateVisitor<ReflectorPredicate> {
@@ -33,12 +35,7 @@ public class ComplexQueryTypePredicateVisitor implements QueryTypePredicateVisit
     }
 
     @Override
-    public ReflectorPredicate equals(final String fieldName, final Function<Object, Object> read) {
-        return new EqualsPredicate(fieldName, read);
-    }
-
-    @Override
-    public ReflectorPredicate like(final String fieldName, final Function<Object, Object> read) {
-        return new LikePredicate(fieldName, read);
+    public ReflectorPredicate compare(final String fieldName, final Function<Object, Object> read, final ReflectorCompareOperator operator) {
+        return new DatabaseFieldPredicate(fieldName, read, operator);
     }
 }

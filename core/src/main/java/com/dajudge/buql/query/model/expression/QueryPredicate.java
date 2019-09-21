@@ -25,11 +25,11 @@ public interface QueryPredicate extends QueryExpression {
         return new OrPredicate(operands);
     }
 
-    static QueryPredicate eq(final QueryExpression e0, final QueryExpression e1) {
-        return new EqualsPredicate(e0, e1);
-    }
-
-    static QueryPredicate like(QueryExpression e0, QueryExpression e1) {
-        return new LikePredicate(e0, e1);
+    static QueryPredicate compare(
+            final QueryExpression e0,
+            final QueryExpression e1,
+            final QueryCompareOperator operator
+    ) {
+        return new QueryComparePredicate(e0, e1, operator);
     }
 }
