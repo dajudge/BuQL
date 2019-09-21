@@ -1,5 +1,6 @@
 package com.dajudge.buql.analyzer.analyzers;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
@@ -30,6 +31,11 @@ public class BulkComplexToManyComplexSelectAnalyzer extends BaseSelectAnalyzer {
             final Matcher methodNameMatcher
     ) {
         return new ComplexResultTypeModel<>(clazz);
+    }
+
+    @Override
+    protected <Q> Function<Object, Map<String, Q>> createPreProcessor() {
+        return new BulkPreProcessor<>();
     }
 
     @Override

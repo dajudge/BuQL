@@ -66,7 +66,7 @@ public final class MethodModelTranslator {
                 model.getResultTypeFactory(),
                 ROW_ID_LABEL
         );
-        return new ReflectSelectQuery<>(queryModel, resultMapper, model.getPostProcessor());
+        return new ReflectSelectQuery<>(queryModel, resultMapper, model.getPreProcessor(), model.getPostProcessor());
     }
 
     private static List<String> getFilterColumns(final FilterFieldsMapping filterFieldsMapping) {

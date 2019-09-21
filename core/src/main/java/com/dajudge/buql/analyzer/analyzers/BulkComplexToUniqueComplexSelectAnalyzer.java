@@ -1,5 +1,6 @@
 package com.dajudge.buql.analyzer.analyzers;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.UniquePostProcessor;
 import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
 
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromComplexBulkMap;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToComplexUniqueMap;
+import static java.util.function.Function.identity;
 
 public class BulkComplexToUniqueComplexSelectAnalyzer extends BaseSelectAnalyzer {
 
@@ -27,6 +29,11 @@ public class BulkComplexToUniqueComplexSelectAnalyzer extends BaseSelectAnalyzer
     @Override
     protected <T> Function<Map<String, List<T>>, ?> createPostProcessor() {
         return new UniquePostProcessor<>();
+    }
+
+    @Override
+    protected <Q> Function<Object, Map<String, Q>> createPreProcessor() {
+        return new BulkPreProcessor<>();
     }
 
     @Override

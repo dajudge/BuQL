@@ -11,6 +11,7 @@ public class MethodSelectModel<Q, R> {
     private final ReflectorPredicate predicate;
     private final String tableName;
     private final List<ResultField<R>> resultFields;
+    private final Function<Object, Map<String, Q>> preProcessor;
     private final Function<Map<String, List<R>>, ? extends Object> postProcessor;
     private final Function<Function<String, Object>, R> resultTypeFactory;
 
@@ -19,12 +20,14 @@ public class MethodSelectModel<Q, R> {
             final String tableName,
             final List<ResultField<R>> resultFields,
             final Function<Function<String, Object>, R> resultTypeFactory,
+            final Function<Object, Map<String, Q>> preProcessor,
             final Function<Map<String, List<R>>, ? extends Object> postProcessor
     ) {
         this.predicate = predicate;
         this.tableName = tableName;
         this.resultFields = resultFields;
         this.resultTypeFactory = resultTypeFactory;
+        this.preProcessor = preProcessor;
         this.postProcessor = postProcessor;
     }
 
@@ -46,5 +49,9 @@ public class MethodSelectModel<Q, R> {
 
     public Function<Function<String, Object>, R> getResultTypeFactory() {
         return resultTypeFactory;
+    }
+
+    public Function<Object, Map<String, Q>> getPreProcessor() {
+        return preProcessor;
     }
 }

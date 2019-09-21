@@ -1,5 +1,6 @@
 package com.dajudge.buql.analyzer.analyzers;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.PrimitiveResultTypeModel;
 import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
@@ -34,6 +35,11 @@ public class BulkComplexToManyPrimitiveSelectAnalyzer extends BaseSelectAnalyzer
             final Matcher methodNameMatcher
     ) {
         return new PrimitiveResultTypeModel<>(lowercaseFirstLetter(methodNameMatcher.group(1)));
+    }
+
+    @Override
+    protected <Q> Function<Object, Map<String, Q>> createPreProcessor() {
+        return new BulkPreProcessor<>();
     }
 
     @Override

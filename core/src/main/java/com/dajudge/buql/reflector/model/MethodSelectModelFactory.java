@@ -17,11 +17,19 @@ public class MethodSelectModelFactory {
             final String tableName,
             final ReflectorPredicate predicate,
             final ResultTypeModel<R> resultTypeModel,
+            final Function<Object, Map<String, Q>> preProcessor,
             final Function<Map<String, List<R>>, ?> postProcessor
     ) {
         final List<ResultField<R>> resultFields = resultTypeModel.getResultFields();
         final Function<Function<String, Object>, R> resultTypeFactory = resultTypeModel::newResultInstance;
-        return new MethodSelectModel<>(predicate, tableName, resultFields, resultTypeFactory, postProcessor);
+        return new MethodSelectModel<>(
+                predicate,
+                tableName,
+                resultFields,
+                resultTypeFactory,
+                preProcessor,
+                postProcessor
+        );
     }
 
 }

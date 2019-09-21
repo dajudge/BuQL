@@ -1,5 +1,6 @@
 package com.dajudge.buql.analyzer.analyzers;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.UniquePostProcessor;
 import com.dajudge.buql.analyzer.predicates.PrimitiveQueryTypePredicate;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 
-import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromPrimitiveBulkMap;
+import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromBulkPrimitive;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToComplexUniqueMap;
 import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 import static java.util.regex.Pattern.compile;
@@ -28,6 +29,11 @@ public class BulkPrimitiveToUniqueComplexSelectAnalyzer extends BaseSelectAnalyz
     @Override
     protected <T> Function<Map<String, List<T>>, ?> createPostProcessor() {
         return new UniquePostProcessor<>();
+    }
+
+    @Override
+    protected <Q> Function<Object, Map<String, Q>> createPreProcessor() {
+        return new BulkPreProcessor<>();
     }
 
     @Override
@@ -54,6 +60,6 @@ public class BulkPrimitiveToUniqueComplexSelectAnalyzer extends BaseSelectAnalyz
 
     @Override
     protected Optional<Type> extractQueryType(final Method method) {
-        return extractFromPrimitiveBulkMap(method);
+        return extractFromBulkPrimitive(method);
     }
 }

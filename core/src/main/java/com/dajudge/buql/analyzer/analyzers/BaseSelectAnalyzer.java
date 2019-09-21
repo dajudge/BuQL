@@ -29,7 +29,7 @@ private final Pattern methodNamePattern;
         final Optional<Type> queryType = extractQueryType(method);
         final Optional<Type> resultType = extractResultType(method);
         final Matcher methodNameMatcher = matchMethodName(method);
-        if (!methodNameMatcher.matches() || !queryType.isPresent() || !resultType.isPresent()) {
+        if (!appliesTo(queryType, resultType, methodNameMatcher)) {
             return Optional.empty();
         }
         final Class<?> actualQueryClass = (Class<?>) queryType.get();
@@ -39,10 +39,20 @@ private final Pattern methodNamePattern;
                 tableName,
                 predicate,
                 createResultFieldsModel(actualResultClass, methodNameMatcher),
+                createPreProcessor(),
                 createPostProcessor()
         );
         return Optional.of(translateMethodModelToQuery(model));
     }
+
+    public boolean appliesTo(final Optional<Type> queryType, final Optional<Type> resultType, final Matcher methodNameMatcher) {
+        final boolean methodNameMatches = methodNameMatcher.matches();
+        final boolean queryTypeMatches = queryType.isPresent();
+        final boolean resultTypeMatches = resultType.isPresent();
+        return methodNameMatches && queryTypeMatches && resultTypeMatches;
+    }
+
+    protected abstract <Q> Function<Object, Map<String, Q>> createPreProcessor();
 
     protected abstract <R> ResultTypeModel<R> createResultFieldsModel(
             final Class<R> clazz,

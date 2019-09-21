@@ -1,5 +1,6 @@
 package com.dajudge.buql.reflector.model;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
@@ -94,7 +95,8 @@ public class MethodSelectModelTest {
         final ReflectorPredicate predicate = new QueryTypeWrapper(OrFilter.class, o -> o)
                 .visit(new ComplexQueryTypePredicateVisitor());
         final ResultTypeModel<TestResultType> resultTypeModel = new ComplexResultTypeModel<>(TestResultType.class);
-        final MethodSelectModel model = createSelectModel(tableName, predicate, resultTypeModel, identity());
+        final Function<Object, Map<String, OrFilter>> preProcessor = new BulkPreProcessor<>();
+        final MethodSelectModel model = createSelectModel(tableName, predicate, resultTypeModel, preProcessor, identity());
         final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
             put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
         }};

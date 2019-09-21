@@ -28,15 +28,17 @@ public class AnalyzersTest extends BuqlTest {
 
     @Table("mytable")
     interface SomeObjectRepository {
-        Map<String, List<FullResultObject>> findByThing1(Map<String, SimpleQueryObject> query);
+        Map<String, List<FullResultObject>> findByComplexQuery(Map<String, SimpleQueryObject> query);
 
-        Map<String, FullResultObject> getByThing1(Map<String, SimpleQueryObject> query);
+        Map<String, FullResultObject> getByComplexQuery(Map<String, SimpleQueryObject> query);
 
         Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
 
-        Map<String, List<String>> findStringValueByPattern(Map<String, SimpleQueryObject> query);
+        Map<String, List<String>> findStringValueByComplexQuery(Map<String, SimpleQueryObject> query);
 
         Map<String, String> getStringValueByLongValue(Map<String, Long> query);
+
+        String getStringValueByLongValue(long query);
     }
 
     @Before
@@ -45,8 +47,16 @@ public class AnalyzersTest extends BuqlTest {
     }
 
     @Test
+    public void single_primitive_to_unique_primitive() {
+        final String result = repository.getStringValueByLongValue(42);
+
+        assertNotNull(result);
+        assertNotNull("v0", result);
+    }
+
+    @Test
     public void bulk_complex_to_many_primitive() {
-        final Map<String, List<String>> result = repository.findStringValueByPattern(COMPLEX_PARAMS_ONE_RESULT);
+        final Map<String, List<String>> result = repository.findStringValueByComplexQuery(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
@@ -65,7 +75,7 @@ public class AnalyzersTest extends BuqlTest {
 
     @Test
     public void bulk_complex_to_many_complex() {
-        final Map<String, List<FullResultObject>> result = repository.findByThing1(COMPLEX_PARAMS_ONE_RESULT);
+        final Map<String, List<FullResultObject>> result = repository.findByComplexQuery(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
@@ -75,7 +85,7 @@ public class AnalyzersTest extends BuqlTest {
 
     @Test
     public void bulk_complex_to_unique_complex() {
-        final Map<String, FullResultObject> result = repository.getByThing1(COMPLEX_PARAMS_ONE_RESULT);
+        final Map<String, FullResultObject> result = repository.getByComplexQuery(COMPLEX_PARAMS_ONE_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
@@ -93,7 +103,7 @@ public class AnalyzersTest extends BuqlTest {
 
     @Test
     public void lists_empty_results() {
-        final Map<String, List<FullResultObject>> result = repository.findByThing1(PARAMS_NO_RESULT);
+        final Map<String, List<FullResultObject>> result = repository.findByComplexQuery(PARAMS_NO_RESULT);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));

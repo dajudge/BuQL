@@ -1,5 +1,6 @@
 package com.dajudge.buql.test.jdbc;
 
+import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
@@ -30,10 +31,12 @@ public class SimpleSelectTest extends DatabaseTest {
         final ReflectorPredicate predicate = new QueryTypeWrapper(queryType, o -> o)
                 .visit(new ComplexQueryTypePredicateVisitor());
         final ResultTypeModel<FullResultObject> resultTypeModel = new ComplexResultTypeModel<>(resultType);
+        final BulkPreProcessor<SimpleQueryObject> preProcessor = new BulkPreProcessor<>();
         final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(
                 "mytable",
                 predicate,
                 resultTypeModel,
+                preProcessor,
                 postProcessor
         );
         final ReflectSelectQuery<SimpleQueryObject, FullResultObject> query = translateMethodModelToQuery(model);

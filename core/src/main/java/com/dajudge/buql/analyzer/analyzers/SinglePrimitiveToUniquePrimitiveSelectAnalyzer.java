@@ -1,7 +1,8 @@
 package com.dajudge.buql.analyzer.analyzers;
 
-import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.PrimitiveResultTypeModel;
+import com.dajudge.buql.analyzer.SingleQueryPreProcessor;
+import com.dajudge.buql.analyzer.SingleResultPostProcessor;
 import com.dajudge.buql.analyzer.UniquePostProcessor;
 import com.dajudge.buql.analyzer.predicates.PrimitiveQueryTypePredicate;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory;
@@ -16,24 +17,28 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromBulkPrimitive;
+import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromSinglePrimitive;
+import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToPrimitiveSingle;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToPrimitiveUniqueMap;
 import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 import static java.util.regex.Pattern.compile;
 
-public class BulkPrimitiveToUniquePrimitiveSelectAnalyzer extends BaseSelectAnalyzer {
+public class SinglePrimitiveToUniquePrimitiveSelectAnalyzer extends BaseSelectAnalyzer {
 
-    public BulkPrimitiveToUniquePrimitiveSelectAnalyzer() {
+    private static final String RESULT_ID = "ID";
+
+    public SinglePrimitiveToUniquePrimitiveSelectAnalyzer() {
         super(compile("get([A-Z].*)By([A-Z].*)"));
     }
 
     @Override
     protected <T> Function<Map<String, List<T>>, ?> createPostProcessor() {
-        return new UniquePostProcessor<>();
+        return new UniquePostProcessor<T>().andThen(new SingleResultPostProcessor<>(RESULT_ID));
     }
 
     @Override
     protected <Q> Function<Object, Map<String, Q>> createPreProcessor() {
-        return new BulkPreProcessor<>();
+        return new SingleQueryPreProcessor<>(RESULT_ID);
     }
 
     @Override
@@ -55,11 +60,11 @@ public class BulkPrimitiveToUniquePrimitiveSelectAnalyzer extends BaseSelectAnal
 
     @Override
     protected Optional<Type> extractResultType(final Method method) {
-        return extractToPrimitiveUniqueMap(method);
+        return extractToPrimitiveSingle(method);
     }
 
     @Override
     protected Optional<Type> extractQueryType(final Method method) {
-        return extractFromBulkPrimitive(method);
+        return extractFromSinglePrimitive(method);
     }
 }

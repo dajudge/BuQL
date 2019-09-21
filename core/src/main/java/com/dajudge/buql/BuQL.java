@@ -23,7 +23,8 @@ public class BuQL {
             new BulkComplexToUniqueComplexSelectAnalyzer(),
             new BulkPrimitiveToUniqueComplexSelectAnalyzer(),
             new BulkPrimitiveToUniquePrimitiveSelectAnalyzer(),
-            new BulkComplexToManyPrimitiveSelectAnalyzer()
+            new BulkComplexToManyPrimitiveSelectAnalyzer(),
+            new SinglePrimitiveToUniquePrimitiveSelectAnalyzer()
     );
     private final Dialect dialect;
     private final DatabaseEngine engine;
@@ -60,7 +61,7 @@ public class BuQL {
             final Object[] objects
     ) {
         final ReflectSelectQuery<Q, R> query = getCachedOrNewQuery(compilerFactory, method);
-        final Map<String, Q> params = (Map<String, Q>) objects[0];
+        final Map<String, Q> params = (Map<String, Q>) query.preProcess(objects[0]);
         final CollectorCallback<R> cb = new CollectorCallback<>(params.keySet());
         query.execute(dialect, engine, params, cb);
         return query.postProcess(cb.getResult());

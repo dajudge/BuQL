@@ -20,6 +20,10 @@ public class ReflectSelectQuery<Q, R> {
         return postProcessor.apply(result);
     }
 
+    public Map<String, Q> preProcess(Object o) {
+        return preProcessor.apply(o);
+    }
+
     public interface Callback<R> {
         void onResult(final String id, final R value);
 
@@ -30,15 +34,18 @@ public class ReflectSelectQuery<Q, R> {
 
     private final SelectQueryModel<Map<String, Q>> queryModel;
     private final ResultMapper<R> resultMapper;
+    private final Function<Object, Map<String, Q>> preProcessor;
     private final Function<Map<String, List<R>>, ? extends Object> postProcessor;
 
     public ReflectSelectQuery(
             final SelectQueryModel<Map<String, Q>> query,
             final ResultMapper<R> resultMapper,
+            final Function<Object, Map<String, Q>> preProcessor,
             final Function<Map<String, List<R>>, ? extends Object> postProcessor
     ) {
         this.queryModel = query;
         this.resultMapper = resultMapper;
+        this.preProcessor = preProcessor;
         this.postProcessor = postProcessor;
     }
 
