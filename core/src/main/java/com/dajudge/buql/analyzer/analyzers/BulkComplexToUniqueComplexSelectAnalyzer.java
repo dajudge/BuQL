@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromComplexBulkMap;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToComplexUniqueMap;
-import static java.util.function.Function.identity;
 
 public class BulkComplexToUniqueComplexSelectAnalyzer extends BaseSelectAnalyzer {
 

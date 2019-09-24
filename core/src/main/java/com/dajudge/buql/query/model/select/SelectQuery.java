@@ -24,6 +24,8 @@ public class SelectQuery implements Query {
             final QueryPredicate predicate,
             final String queryTable
     ) {
+        assert !projectionColumns.isEmpty() : "projectionColumns must not be empty";
+        assert !filterColumns.isEmpty() : "filterColumms must not be empty";
         assert 0 == filterParameters.size() % filterColumns.size()
                 : "size of filterParameters must be a multiple of the size of filterColumns";
         this.projectionColumns = unmodifiableList(projectionColumns);

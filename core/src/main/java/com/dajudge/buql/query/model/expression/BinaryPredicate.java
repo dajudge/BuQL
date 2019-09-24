@@ -1,8 +1,5 @@
 package com.dajudge.buql.query.model.expression;
 
-import com.dajudge.buql.query.dialect.Dialect;
-import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
-
 public abstract class BinaryPredicate implements QueryPredicate {
     private final QueryExpression e0;
     private final QueryExpression e1;

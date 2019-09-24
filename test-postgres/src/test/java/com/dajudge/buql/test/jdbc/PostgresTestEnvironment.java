@@ -13,7 +13,7 @@ import static java.util.UUID.randomUUID;
 public class PostgresTestEnvironment implements TestEnvironment {
     @Override
     public Connection newConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:tc:postgis:9.6://somehostname:someport/" + randomUUID().toString());
+        return DriverManager.getConnection("jdbc:tc:postgis:9.6://somehostname:someport/testdb");
     }
 
     @Override

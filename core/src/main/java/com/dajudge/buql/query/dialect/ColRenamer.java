@@ -1,19 +1,20 @@
 package com.dajudge.buql.query.dialect;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ColRenamer {
-    ColRenamer IDENTITY = new ColRenamer() {
-        @Override
-        public String rename(final String in) {
-            return in;
-        }
+    ColRenamer IDENTITY = in -> in;
 
-        @Override
-        public String resolve(final String in) {
-            return in;
-        }
-    };
-
-    String rename(String in);
+    static ColRenamer prefixRenamer(final String prefix, final List<String> cols) {
+        final Map<String, String> resolver;
+        return new ColRenamer() {
+            @Override
+            public String resolve(final String in) {
+                return null;
+            }
+        };
+    }
 
     String resolve(String in);
 }

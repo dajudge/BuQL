@@ -1,20 +1,15 @@
-package com.dajudge.buql.query.dialect;
+package com.dajudge.buql.query.dialect.base;
 
-import com.dajudge.buql.query.model.QueryWithParameters;
+import com.dajudge.buql.query.dialect.Dialect;
+import com.dajudge.buql.query.dialect.SqlCompareOperator;
 import com.dajudge.buql.query.model.expression.*;
 import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
-import com.dajudge.buql.query.model.select.SelectQuery;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
 public abstract class BaseDialect implements Dialect {
-
-    @Override
-    public QueryWithParameters select(final SelectQuery selectQuery) {
-        return getSelectQueryWriter().toSql(selectQuery);
-    }
 
     @Override
     public String and(final ProjectionSources sources, final AndPredicate predicate) {
@@ -62,6 +57,4 @@ public abstract class BaseDialect implements Dialect {
         final String right = predicate.getRight().toSql(sources, this);
         return op.toSql(left, right);
     }
-
-    protected abstract SelectQueryWriter getSelectQueryWriter();
 }

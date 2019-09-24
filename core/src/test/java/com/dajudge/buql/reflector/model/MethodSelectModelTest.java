@@ -1,7 +1,6 @@
 package com.dajudge.buql.reflector.model;
 
 import com.dajudge.buql.analyzer.BulkPreProcessor;
-import com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
@@ -117,6 +116,11 @@ public class MethodSelectModelTest {
                     });
                 });
                 cb.done();
+            }
+
+            @Override
+            public void executeStatement(final String sql, final List<?> params, final DatabaseResultCallback cb) {
+                throw new UnsupportedOperationException("Not implemented for this test");
             }
         };
         query.execute(new PostgresDialect(), engine, params, new ReflectSelectQuery.Callback<TestResultType>() {

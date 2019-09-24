@@ -2,7 +2,6 @@ package com.dajudge.buql.reflector.model.visitor;
 
 import com.dajudge.buql.reflector.annotations.BooleanOperationType;
 import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
-import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 
 import java.util.function.Function;
 

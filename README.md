@@ -9,6 +9,12 @@ BuQL uses a specialized SQL generation engine that can retrieve a large number o
 fashion to greatly reduce the communication overhead found in systems that hit the database once (or even 
 multiple times!) for each processed message.
 
+## Compatibility
+BuQL has automated tests verifying proper functionality with the following databases:
+* H2
+* PostgreSQL (with PostGIS extension)
+* MariaDB
+
 ## Running a bulk query with BuQL (concept)
 In order to simplify data retrieval, BuQL uses reflection to simplify implementation of the data access logic
 you want to execute. All you need to do is provide some Java Beans for passing in query parameters / getting

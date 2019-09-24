@@ -16,10 +16,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 
-import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromBulkPrimitive;
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromSinglePrimitive;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToPrimitiveSingle;
-import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToPrimitiveUniqueMap;
 import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 import static java.util.regex.Pattern.compile;
 

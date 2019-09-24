@@ -9,6 +9,7 @@ import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisit
 import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import com.dajudge.buql.test.shared.DatabaseTest;
+import com.dajudge.buql.test.shared.TestContainer;
 import com.dajudge.buql.test.shared.model.FullResultObject;
 import com.dajudge.buql.test.shared.model.SimpleQueryObject;
 import org.junit.Test;
@@ -17,9 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.zip.DeflaterInputStream;
 
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
+import static com.dajudge.buql.test.shared.TestContainer.DIALECT;
 
 public class SimpleSelectTest extends DatabaseTest {
 
@@ -45,7 +48,7 @@ public class SimpleSelectTest extends DatabaseTest {
             put("ID1", new SimpleQueryObject(43));
             put("ID2", new SimpleQueryObject(44));
         }};
-        query.execute(dialect, engine, params, new ReflectSelectQuery.Callback<FullResultObject>() {
+        query.execute(DIALECT, engine, params, new ReflectSelectQuery.Callback<FullResultObject>() {
             @Override
             public void onResult(final String id, final FullResultObject value) {
                 System.out.println(id + " -> " + value);

@@ -1,0 +1,13 @@
+dependencies {
+    testImplementation project(":core")
+    testImplementation project(":test-base")
+    testImplementation libJUnit
+    testRuntime libTestcontainersMariadb
+    testRuntime libMariadbJdbc
+    testRuntime libLogback
+}
+
+test {
+    testLogging.showStandardStreams = true
+    testClassesDirs = project(':test-base').sourceSets.main.output.classesDirs
+}

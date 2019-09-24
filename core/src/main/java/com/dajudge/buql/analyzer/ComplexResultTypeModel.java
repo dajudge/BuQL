@@ -6,7 +6,6 @@ import com.dajudge.buql.reflector.model.ResultField;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer.createComplexResultFieldsAnalyzer;
 import static java.util.stream.Collectors.toList;

@@ -1,6 +1,9 @@
-package com.dajudge.buql.query.dialect;
+package com.dajudge.buql.query.dialect.h2;
+
+import com.dajudge.buql.query.dialect.ColRenamer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class IncrementingColRenamer implements ColRenamer {
@@ -8,14 +11,10 @@ public class IncrementingColRenamer implements ColRenamer {
     private final String prefix;
     private int counter;
 
-    public IncrementingColRenamer(final String prefix, final int start) {
+    public IncrementingColRenamer(final String prefix, final int start, final List<String> colNames) {
         this.prefix = prefix;
         counter = start;
-    }
-
-    @Override
-    public String rename(final String in) {
-        return map(in, false);
+        colNames.stream().forEach(colName -> map(colName, false));
     }
 
     private String map(final String in, final boolean required) {

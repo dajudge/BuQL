@@ -13,7 +13,7 @@ import static java.util.UUID.randomUUID;
 public class H2TestEnvironment implements TestEnvironment {
     @Override
     public Connection newConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:h2:mem:" + randomUUID().toString() + ";MODE=PostgreSQL");
+        return DriverManager.getConnection("jdbc:h2:mem:testdb;MODE=PostgreSQL");
     }
 
     @Override

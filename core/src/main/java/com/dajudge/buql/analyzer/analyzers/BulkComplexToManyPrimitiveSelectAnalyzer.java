@@ -1,12 +1,10 @@
 package com.dajudge.buql.analyzer.analyzers;
 
 import com.dajudge.buql.analyzer.BulkPreProcessor;
-import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.PrimitiveResultTypeModel;
 import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
-import com.dajudge.buql.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -18,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.dajudge.buql.analyzer.typeextractors.QueryTypeExtractors.extractFromComplexBulkMap;
-import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToComplexManyMap;
 import static com.dajudge.buql.analyzer.typeextractors.ResultTypeExtractors.extractToPrimitiveManyMap;
 import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 import static java.util.function.Function.identity;

@@ -86,7 +86,7 @@ public class JdbcDatabaseEngine implements DatabaseEngine {
                 return safe(() -> {
                     final List<String> columnNames = new ArrayList<>();
                     for (int i = 0; i < rs.getColumnCount(); i++) {
-                        columnNames.add(rs.getColumnName(i + 1));
+                        columnNames.add(rs.getColumnLabel(i + 1));
                     }
                     return columnNames;
                 });
@@ -102,7 +102,7 @@ public class JdbcDatabaseEngine implements DatabaseEngine {
         }
     }
 
-
+    @Override
     public void executeStatement(
             final String sql,
             final List<? extends Object> params,
