@@ -2,6 +2,7 @@ package com.dajudge.buql.reflector;
 
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
+import com.dajudge.buql.query.engine.DatabaseResultCallback;
 import com.dajudge.buql.query.engine.DefaultDatabaseResultCallback;
 import com.dajudge.buql.query.model.QueryWithParameters;
 import com.dajudge.buql.query.model.SelectQueryModel;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -60,8 +62,18 @@ public class ReflectSelectQuery<Q, R> {
         assert params != null;
         assert callback != null;
 
-        final QueryWithParameters query = queryModel.create(params).toSelectQuery(dialect);
-        engine.executeQuery(query.getSql(), query.getQueryParameters(), new DefaultDatabaseResultCallback() {
+        final List<QueryWithParameters> queries = queryModel.create(params).toSelectQuery(dialect);
+        assert !queries.isEmpty();
+        executeQueries(engine, queries, callback);
+    }
+
+    private void executeQueries(
+            final DatabaseEngine engine,
+            final List<QueryWithParameters> remainingQueries,
+            final Callback<R> callback
+    ) {
+        final QueryWithParameters currentQuery = remainingQueries.get(0);
+        final DatabaseResultCallback currentCallback = new DefaultDatabaseResultCallback() {
             @Override
             public void onMetadata(final ResultMetadata metadata) {
                 if (LOG.isDebugEnabled()) {
@@ -84,8 +96,13 @@ public class ReflectSelectQuery<Q, R> {
 
             @Override
             public void done() {
-                callback.done();
+                if (remainingQueries.size() == 1) {
+                    callback.done();
+                } else {
+                    executeQueries(engine, remainingQueries.subList(1, remainingQueries.size()), callback);
+                }
             }
-        });
+        };
+        engine.executeQuery(currentQuery.getSql(), currentQuery.getQueryParameters(), currentCallback);
     }
 }

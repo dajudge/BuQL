@@ -5,8 +5,10 @@ import com.dajudge.buql.query.model.expression.*;
 import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
 import com.dajudge.buql.query.model.select.SelectQuery;
 
+import java.util.List;
+
 public interface Dialect {
-    QueryWithParameters select(SelectQuery selectQuery);
+    List<QueryWithParameters> select(SelectQuery selectQuery);
 
     String and(ProjectionSources sources, AndPredicate andPredicate);
 

@@ -41,7 +41,7 @@ public abstract class BaseQueryWriterTest {
                 PREDICATE,
                 QUERY_TABLE
         );
-        final QueryWithParameters query = getDialect().select(queryModel);
+        final QueryWithParameters query = getDialect().select(queryModel).get(0);
         assertNotNull(query);
         assertEquals(expectedSql, query.getSql());
         assertEquals(FILTER_PARAMETERS, query.getQueryParameters());

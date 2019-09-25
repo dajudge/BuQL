@@ -1,7 +1,7 @@
 package com.dajudge.buql.test.jdbc;
 
-import com.dajudge.buql.query.engine.QueryExecutor;
 import com.dajudge.buql.query.model.Query;
+import com.dajudge.buql.query.model.QueryWithParameters;
 import com.dajudge.buql.query.model.expression.DataColExpression;
 import com.dajudge.buql.query.model.expression.FilterColExpression;
 import com.dajudge.buql.query.model.expression.QueryPredicate;
@@ -10,7 +10,6 @@ import com.dajudge.buql.query.model.select.SelectQuery;
 import com.dajudge.buql.test.jdbc.matcher.QueryResult;
 import com.dajudge.buql.test.jdbc.matcher.QueryResultAssertions;
 import com.dajudge.buql.test.shared.DatabaseTest;
-import com.dajudge.buql.test.shared.TestContainer;
 import org.junit.Test;
 
 import java.util.List;
@@ -94,7 +93,8 @@ public class JdbcDatabaseEngineTest extends DatabaseTest {
 
     private QueryResultAssertions assertWith(final Query query) {
         final QueryResult queryResult = new QueryResult();
-        new QueryExecutor(engine, DIALECT).execute(query, into(queryResult));
+        final QueryWithParameters rawQuery = query.toSelectQuery(DIALECT).get(0);
+        engine.executeQuery(rawQuery.getSql(), rawQuery.getQueryParameters(), into(queryResult));
         return QueryResultAssertions.assertWith(queryResult);
     }
 

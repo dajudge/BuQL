@@ -2,7 +2,9 @@ package com.dajudge.buql.query.model;
 
 import com.dajudge.buql.query.dialect.Dialect;
 
+import java.util.List;
+
 public interface Query {
-    QueryWithParameters toSelectQuery(Dialect dialect);
+    List<QueryWithParameters> toSelectQuery(Dialect dialect);
 
 }

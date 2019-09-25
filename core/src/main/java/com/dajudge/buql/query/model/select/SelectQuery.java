@@ -48,7 +48,7 @@ public class SelectQuery implements Query {
     }
 
     @Override
-    public QueryWithParameters toSelectQuery(final Dialect dialect) {
+    public List<QueryWithParameters> toSelectQuery(final Dialect dialect) {
         return dialect.select(this);
     }
 

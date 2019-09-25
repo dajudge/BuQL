@@ -52,9 +52,9 @@ public class JdbcDatabaseEngine implements DatabaseEngine {
             final DatabaseResultCallback cb
     ) {
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Preparing statement: {} {}", sql, params);
-        } else if (LOG.isDebugEnabled()) {
             LOG.debug("Preparing statement: {} {}", sql, params);
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Preparing statement: {}", sql);
         }
         try (final PreparedStatement s = connection.prepareStatement(sql)) {
             for (int i = 0; i < params.size(); i++) {
