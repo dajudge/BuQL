@@ -1,7 +1,4 @@
 # BuQL - A Bulk Query Library 
-___Note:___ __THIS IS STILL WORK IN PROGRESS. DON'T BELIEVE THE PROMISES!__
-
-
 Modern streaming applications often process thousands of messages per second. Classical RDMBS implementations
 can easily become a bottleneck in your architecture when DB access is performed on a per-message basis.
 
