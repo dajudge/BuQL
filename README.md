@@ -41,7 +41,7 @@ public interface PersonRepository {
     // supported in BuQL)
     Person findById(Long ids);
     
-    // The is a bulk data access method. The Strings in the Map types 
+    // This is a bulk data access method. The Strings in the Map types 
     // correlate the returned results to the query objects you passed in.
     Map<String, Person> getById(Map<String, Long> ids);
     
