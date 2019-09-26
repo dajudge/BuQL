@@ -24,4 +24,6 @@ public interface Dialect {
     );
 
     String booleanOperation(List<String> operands, String operator);
+
+    String isNull(String operand);
 }

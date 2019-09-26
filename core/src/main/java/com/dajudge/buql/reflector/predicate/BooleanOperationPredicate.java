@@ -1,5 +1,7 @@
 package com.dajudge.buql.reflector.predicate;
 
+import com.dajudge.buql.query.model.expression.QueryPredicate;
+
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;

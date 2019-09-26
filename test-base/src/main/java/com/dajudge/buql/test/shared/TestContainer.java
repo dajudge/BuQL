@@ -10,11 +10,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.ServiceLoader.load;
+import static java.util.stream.Collectors.joining;
 
 public class TestContainer {
 
@@ -51,16 +53,22 @@ public class TestContainer {
     }
 
     private static void setupTestData(final DatabaseEngine engine) {
+        final String cols = Stream.of(
+                "pk BIGINT",
+                "stringValue VARCHAR(128) NOT NULL",
+                "longValue BIGINT NOT NULL",
+                "nullableValue VARCHAR(128)"
+        ).collect(joining(", "));
         engine.executeStatement(
-                "CREATE TABLE mytable(pk BIGINT, stringValue VARCHAR(128), longValue BIGINT, PRIMARY KEY(pk))",
+                "CREATE TABLE mytable(" + cols + ", PRIMARY KEY(pk))",
                 emptyList(),
                 DatabaseTest.FAIL_ON_ERROR
         );
         asList(
-                asList(0, "v0", 42),
-                asList(1, "v1", 43)
+                asList(0, "v0", 42, null),
+                asList(1, "v1", 43, "not null")
         ).forEach(params -> engine.executeStatement(
-                "INSERT INTO mytable(pk, stringValue, longValue) VALUES (?, ?, ?)",
+                "INSERT INTO mytable(pk, stringValue, longValue, nullableValue) VALUES (?, ?, ?, ?)",
                 params,
                 DatabaseTest.FAIL_ON_ERROR
         ));

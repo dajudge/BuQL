@@ -15,10 +15,15 @@ import java.util.stream.Collectors;
 
 public abstract class BaseDialect implements Dialect {
     @Override
+    public String isNull(final String operand) {
+        return "(" + operand + " IS NULL)";
+    }
+
+    @Override
     public String booleanOperation(final List<String> operands, final String operator) {
         return operands.size() == 1 ?
                 operands.get(0) :
-                operands.stream().collect(Collectors.joining(" " + operator + " "));
+                "(" + operands.stream().collect(Collectors.joining(" " + operator + " ")) + ")";
     }
 
     @Override

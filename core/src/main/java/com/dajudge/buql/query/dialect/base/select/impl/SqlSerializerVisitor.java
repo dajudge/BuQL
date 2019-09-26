@@ -2,10 +2,7 @@ package com.dajudge.buql.query.dialect.base.select.impl;
 
 import com.dajudge.buql.query.QueryVisitor;
 import com.dajudge.buql.query.dialect.Dialect;
-import com.dajudge.buql.query.model.expression.BooleanOperation;
-import com.dajudge.buql.query.model.expression.DataColExpression;
-import com.dajudge.buql.query.model.expression.FilterColExpression;
-import com.dajudge.buql.query.model.expression.QueryComparePredicate;
+import com.dajudge.buql.query.model.expression.*;
 import com.dajudge.buql.query.model.select.ProjectionColumn;
 
 import static java.util.stream.Collectors.toList;
@@ -49,5 +46,10 @@ public class SqlSerializerVisitor implements QueryVisitor<String> {
                 queryComparePredicate.getRight().visit(this),
                 queryComparePredicate.getOperator().getOperator()
         );
+    }
+
+    @Override
+    public String isNull(final QueryExpression expression) {
+        return dialect.isNull(expression.visit(this));
     }
 }

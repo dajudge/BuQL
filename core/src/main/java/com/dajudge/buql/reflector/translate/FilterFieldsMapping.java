@@ -6,25 +6,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static java.util.stream.Collectors.toMap;
-
 public class FilterFieldsMapping {
-    private final Map<String, Function<Object, Object>> readers = new HashMap<>();
+    private final Map<String, Function<Object, Object>> resolver = new HashMap<>();
+    private final Map<Function<Object, Object>, String> cache = new HashMap<>();
 
     public List<String> getFilterColumns() {
-        return new ArrayList<>(readers.keySet());
+        return new ArrayList<>(resolver.keySet());
     }
 
     public String create(final Function<Object, Object> reader) {
-        final String id = "P" + readers.size();
-        readers.put(id, reader);
+        final String id = cache.computeIfAbsent(reader, r -> "P" + resolver.size());
+        resolver.put(id, reader);
         return id;
     }
 
     public Map<String, Object> extractFilterFields(final Object object) {
-        return readers.entrySet().stream().collect(toMap(
-                Map.Entry::getKey,
-                e -> e.getValue().apply(object)
-        ));
+        final Map<String, Object> ret = new HashMap<>();
+        resolver.forEach((k, v) -> ret.put(k, v.apply(object)));
+        return ret;
     }
 }

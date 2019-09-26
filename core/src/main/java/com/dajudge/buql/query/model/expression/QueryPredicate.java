@@ -22,4 +22,8 @@ public interface QueryPredicate extends QueryExpression {
     ) {
         return new QueryComparePredicate(e0, e1, operator);
     }
+
+    static QueryPredicate isNull(QueryExpression expression) {
+        return new QueryIsNullPredicate(expression);
+    }
 }

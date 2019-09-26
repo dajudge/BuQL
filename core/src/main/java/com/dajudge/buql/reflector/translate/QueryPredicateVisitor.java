@@ -16,7 +16,7 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
 
     @Override
     public QueryPredicate booleanOperation(final BooleanOperationPredicate predicate) {
-        return QueryPredicate.or(operandsOf(predicate));
+return        predicate.getOperator().createQueryPredicate(operandsOf(predicate));
     }
 
     @Override
@@ -30,6 +30,11 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
                 right.visit(new QueryExpressionVisitor(filterFieldsMapping)),
                 operator.getOperator()
         );
+    }
+
+    @Override
+    public QueryPredicate isNull(final ReflectorExpression expression) {
+        return QueryPredicate.isNull(expression.visit(new QueryExpressionVisitor(filterFieldsMapping)));
     }
 
     private List<QueryPredicate> operandsOf(final BooleanOperationPredicate predicate) {

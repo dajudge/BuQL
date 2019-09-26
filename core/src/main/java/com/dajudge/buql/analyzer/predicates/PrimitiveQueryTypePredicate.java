@@ -19,7 +19,7 @@ public class PrimitiveQueryTypePredicate implements ReflectorPredicate {
     public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
         return visitor.compare(
                 new DatabaseFieldExpression(colName),
-                new ParameterExpression(identity(), identity()),
+                new ParameterExpression(identity()),
                 EQUALS
         );
     }

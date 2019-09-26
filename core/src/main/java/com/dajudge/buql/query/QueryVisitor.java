@@ -1,9 +1,6 @@
 package com.dajudge.buql.query;
 
-import com.dajudge.buql.query.model.expression.BooleanOperation;
-import com.dajudge.buql.query.model.expression.DataColExpression;
-import com.dajudge.buql.query.model.expression.FilterColExpression;
-import com.dajudge.buql.query.model.expression.QueryComparePredicate;
+import com.dajudge.buql.query.model.expression.*;
 
 public interface QueryVisitor<T> {
     T constantTrue();
@@ -15,4 +12,6 @@ public interface QueryVisitor<T> {
     T filterCol(FilterColExpression filterColExpression);
 
     T compare(QueryComparePredicate queryComparePredicate);
+
+    T isNull(QueryExpression expression);
 }
