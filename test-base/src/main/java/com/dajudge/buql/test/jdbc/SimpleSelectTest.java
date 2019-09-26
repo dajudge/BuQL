@@ -2,14 +2,12 @@ package com.dajudge.buql.test.jdbc;
 
 import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
+import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
-import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
-import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import com.dajudge.buql.test.shared.DatabaseTest;
-import com.dajudge.buql.test.shared.TestContainer;
 import com.dajudge.buql.test.shared.model.FullResultObject;
 import com.dajudge.buql.test.shared.model.SimpleQueryObject;
 import org.junit.Test;
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.zip.DeflaterInputStream;
 
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
@@ -31,8 +28,7 @@ public class SimpleSelectTest extends DatabaseTest {
         final Class<SimpleQueryObject> queryType = SimpleQueryObject.class;
         final Class<FullResultObject> resultType = FullResultObject.class;
         final Function<Map<String, List<FullResultObject>>, ? extends Object> postProcessor = Function.identity();
-        final ReflectorPredicate predicate = new QueryTypeWrapper(queryType, o -> o)
-                .visit(new ComplexQueryTypePredicateVisitor());
+        final ReflectorPredicate predicate = new ComplexQueryTypePredicate(queryType);
         final ResultTypeModel<FullResultObject> resultTypeModel = new ComplexResultTypeModel<>(resultType);
         final BulkPreProcessor<SimpleQueryObject> preProcessor = new BulkPreProcessor<>();
         final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(

@@ -1,7 +1,6 @@
-package com.dajudge.buql.reflector.model.operator;
+package com.dajudge.buql.reflector.operator;
 
 import com.dajudge.buql.reflector.annotations.GreaterThanEquals;
-import com.dajudge.buql.reflector.annotations.Like;
 import com.dajudge.buql.reflector.api.ReflectorOperator;
 import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
 

@@ -25,6 +25,6 @@ public class DefaultPredicateSerializer implements PredicateSerializer {
 
     @Override
     public String getSql() {
-        return selectQuery.getPredicate().toSql(sources, dialect);
+        return selectQuery.getPredicate().visit(new SqlSerializerVisitor(sources, dialect));
     }
 }

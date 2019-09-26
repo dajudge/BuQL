@@ -1,6 +1,4 @@
-package com.dajudge.buql.reflector.model.visitor;
-
-import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
+package com.dajudge.buql.reflector.predicate;
 
 import java.beans.PropertyDescriptor;
 import java.util.function.Function;
@@ -22,10 +20,10 @@ public class ComparisonPredicate extends FieldPredicate {
 
     @Override
     protected <T> T visit(
-            final QueryTypePredicateVisitor<T> visitor,
+            final ReflectorPredicateVisitor<T> visitor,
             final String colName,
             final Function<Object, Object> read
     ) {
-        return visitor.compare(colName, read, operator, transform);
+        return new DatabaseFieldPredicate(colName, read, operator, transform).visit(visitor);
     }
 }

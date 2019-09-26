@@ -2,14 +2,13 @@ package com.dajudge.buql.reflector.model;
 
 import com.dajudge.buql.analyzer.BulkPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
+import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.annotations.BooleanOperator;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
-import com.dajudge.buql.reflector.model.translate.ComplexQueryTypePredicateVisitor;
-import com.dajudge.buql.reflector.model.visitor.QueryTypeWrapper;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import org.junit.Test;
 
@@ -91,8 +90,7 @@ public class MethodSelectModelTest {
     @Test
     public void play() {
         final String tableName = "myTable";
-        final ReflectorPredicate predicate = new QueryTypeWrapper(OrFilter.class, o -> o)
-                .visit(new ComplexQueryTypePredicateVisitor());
+        final ReflectorPredicate predicate = new ComplexQueryTypePredicate(OrFilter.class);
         final ResultTypeModel<TestResultType> resultTypeModel = new ComplexResultTypeModel<>(TestResultType.class);
         final Function<Object, Map<String, OrFilter>> preProcessor = new BulkPreProcessor<>();
         final MethodSelectModel model = createSelectModel(tableName, predicate, resultTypeModel, preProcessor, identity());

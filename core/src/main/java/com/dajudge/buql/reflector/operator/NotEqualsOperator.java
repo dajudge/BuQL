@@ -1,4 +1,4 @@
-package com.dajudge.buql.reflector.model.operator;
+package com.dajudge.buql.reflector.operator;
 
 import com.dajudge.buql.reflector.annotations.NotEquals;
 import com.dajudge.buql.reflector.api.ReflectorOperator;

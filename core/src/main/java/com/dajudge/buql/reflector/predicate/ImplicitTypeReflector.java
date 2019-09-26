@@ -1,9 +1,8 @@
-package com.dajudge.buql.reflector.model.visitor;
+package com.dajudge.buql.reflector.predicate;
 
 import com.dajudge.buql.reflector.annotations.Transient;
 import com.dajudge.buql.reflector.api.ReflectorOperator;
 import com.dajudge.buql.reflector.api.ReflectorQueryTypeTransform;
-import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -20,7 +19,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 
-public class QueryFieldsWrapper implements OperandAccessor {
+public class ImplicitTypeReflector {
     private static final Collection<ReflectorOperator> OPERATORS = loadExtensionsOfType(ReflectorOperator.class);
     private static final Collection<ReflectorQueryTypeTransform> TRANSFORMS =
             loadExtensionsOfType(ReflectorQueryTypeTransform.class);
@@ -32,7 +31,7 @@ public class QueryFieldsWrapper implements OperandAccessor {
     private final BeanInfo bean;
     private final Function<Object, Object> parentAccessor;
 
-    public QueryFieldsWrapper(
+    public ImplicitTypeReflector(
             final Class<?> type,
             final Function<Object, Object> parentAccessor
     ) {
@@ -44,8 +43,7 @@ public class QueryFieldsWrapper implements OperandAccessor {
         }
     }
 
-    @Override
-    public List<OperandWrapper> getOperands() {
+    public List<ReflectorPredicate> getOperands() {
         return Stream.of(bean.getPropertyDescriptors())
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
@@ -54,7 +52,7 @@ public class QueryFieldsWrapper implements OperandAccessor {
                 .collect(toList());
     }
 
-    private OperandWrapper createPredicate(final PropertyDescriptor prop) {
+    private ReflectorPredicate createPredicate(final PropertyDescriptor prop) {
         return new ComparisonPredicate(
                 prop,
                 parentAccessor,

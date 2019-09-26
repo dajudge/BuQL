@@ -1,8 +1,7 @@
 package com.dajudge.buql.query.model.expression;
 
-import com.dajudge.buql.query.dialect.Dialect;
-import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
+import com.dajudge.buql.query.QueryVisitor;
 
 public interface QueryExpression {
-    String toSql(ProjectionSources sources, final Dialect dialect);
+    <T> T visit(QueryVisitor<T> visitor);
 }

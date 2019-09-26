@@ -1,7 +1,8 @@
 package com.dajudge.buql.query.dialect;
 
 import com.dajudge.buql.query.model.QueryWithParameters;
-import com.dajudge.buql.query.model.expression.*;
+import com.dajudge.buql.query.model.expression.DataColExpression;
+import com.dajudge.buql.query.model.expression.FilterColExpression;
 import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
 import com.dajudge.buql.query.model.select.SelectQuery;
 
@@ -10,10 +11,6 @@ import java.util.List;
 public interface Dialect {
     List<QueryWithParameters> select(SelectQuery selectQuery);
 
-    String and(ProjectionSources sources, AndPredicate andPredicate);
-
-    String or(ProjectionSources sources, OrPredicate predicate);
-
     String dataColumn(ProjectionSources sources, DataColExpression dataColExpression);
 
     String filterColumn(ProjectionSources sources, FilterColExpression filterColExpression);
@@ -21,8 +18,10 @@ public interface Dialect {
     String constTrue();
 
     String compareOperator(
-            ProjectionSources sources,
-            BinaryPredicate predicate,
-            SqlCompareOperator op
+            final String left,
+            final String right,
+            final SqlCompareOperator op
     );
+
+    String booleanOperation(List<String> operands, String operator);
 }

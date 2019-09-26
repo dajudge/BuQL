@@ -4,37 +4,28 @@ import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
-public abstract class BooleanOperationPredicate implements ReflectorPredicate {
-    public static BooleanOperationPredicate and(final List<ReflectorPredicate> operands) {
-        return new BooleanOperationPredicate(operands) {
-            @Override
-            public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
-                return visitor.and(this);
-            }
-        };
-    }
-
-    public static BooleanOperationPredicate or(final List<ReflectorPredicate> operands) {
-        return new BooleanOperationPredicate(operands) {
-            @Override
-            public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
-                return visitor.or(this);
-            }
-        };
-    }
-
+public class BooleanOperationPredicate implements ReflectorPredicate {
+    private final ReflectorBooleanOperator operator;
     private final List<ReflectorPredicate> operands;
 
-    private BooleanOperationPredicate(
+    public BooleanOperationPredicate(
+            final ReflectorBooleanOperator operator,
             final List<ReflectorPredicate> operands
     ) {
+        this.operator = operator;
         this.operands = unmodifiableList(operands);
     }
 
     @Override
-    public abstract <T> T visit(final ReflectorPredicateVisitor<T> visitor);
+    public <T> T visit(final ReflectorPredicateVisitor<T> visitor) {
+        return visitor.booleanOperation(this);
+    }
 
     public List<ReflectorPredicate> getOperands() {
         return operands;
+    }
+
+    public ReflectorBooleanOperator getOperator() {
+        return operator;
     }
 }

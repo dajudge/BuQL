@@ -1,10 +1,7 @@
 package com.dajudge.buql.reflector.translate;
 
 import com.dajudge.buql.query.model.expression.QueryPredicate;
-import com.dajudge.buql.reflector.predicate.BooleanOperationPredicate;
-import com.dajudge.buql.reflector.predicate.ReflectorCompareOperator;
-import com.dajudge.buql.reflector.predicate.ReflectorExpression;
-import com.dajudge.buql.reflector.predicate.ReflectorPredicateVisitor;
+import com.dajudge.buql.reflector.predicate.*;
 
 import java.util.List;
 
@@ -18,13 +15,8 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
     }
 
     @Override
-    public QueryPredicate or(final BooleanOperationPredicate predicate) {
+    public QueryPredicate booleanOperation(final BooleanOperationPredicate predicate) {
         return QueryPredicate.or(operandsOf(predicate));
-    }
-
-    @Override
-    public QueryPredicate and(final BooleanOperationPredicate predicate) {
-        return QueryPredicate.and(operandsOf(predicate));
     }
 
     @Override
@@ -41,7 +33,8 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
     }
 
     private List<QueryPredicate> operandsOf(final BooleanOperationPredicate predicate) {
-        return predicate.getOperands().stream()
+        final List<ReflectorPredicate> operands = predicate.getOperands();
+        return operands.stream()
                 .map(op -> op.visit(new QueryPredicateVisitor(filterFieldsMapping)))
                 .collect(toList());
     }

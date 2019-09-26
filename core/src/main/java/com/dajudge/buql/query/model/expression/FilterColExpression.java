@@ -1,7 +1,6 @@
 package com.dajudge.buql.query.model.expression;
 
-import com.dajudge.buql.query.dialect.Dialect;
-import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
+import com.dajudge.buql.query.QueryVisitor;
 
 public class FilterColExpression implements QueryExpression {
     private final String colName;
@@ -10,12 +9,12 @@ public class FilterColExpression implements QueryExpression {
         this.colName = colName;
     }
 
-    @Override
-    public String toSql(final ProjectionSources sources, final Dialect dialect) {
-        return dialect.filterColumn(sources, this);
-    }
-
     public String getColumnName() {
         return colName;
+    }
+
+    @Override
+    public <T> T visit(final QueryVisitor<T> visitor) {
+        return visitor.filterCol(this);
     }
 }

@@ -1,4 +1,4 @@
-package com.dajudge.buql.reflector.model.visitor;
+package com.dajudge.buql.reflector.predicate;
 
 import com.dajudge.buql.reflector.annotations.Transient;
 
@@ -12,11 +12,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BooleanOperatorWrapper implements OperandAccessor {
+public class ExplicitTypeReflector  {
     private final BeanInfo bean;
     private final Function<Object, Object> parentAccessor;
 
-    public BooleanOperatorWrapper(
+    public ExplicitTypeReflector(
             final Class<?> type,
             final Function<Object, Object> parentAccessor
     ) {
@@ -28,13 +28,12 @@ public class BooleanOperatorWrapper implements OperandAccessor {
         }
     }
 
-    @Override
-    public List<OperandWrapper> getOperands() {
+    public List<ReflectorPredicate> getOperands() {
         return Stream.of(bean.getPropertyDescriptors())
                 .filter(it -> it.getReadMethod() != null)
                 .filter(it -> it.getReadMethod().getDeclaringClass() != Object.class)
                 .filter(it -> it.getReadMethod().getAnnotation(Transient.class) == null)
-                .map(p -> new QueryTypeWrapper(p.getPropertyType(), o -> read(o, p)))
+                .map(p -> new TypePredicate(p.getPropertyType(), o -> read(o, p)))
                 .collect(Collectors.toList());
     }
 

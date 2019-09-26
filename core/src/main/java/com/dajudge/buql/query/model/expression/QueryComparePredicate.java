@@ -1,7 +1,6 @@
 package com.dajudge.buql.query.model.expression;
 
-import com.dajudge.buql.query.dialect.Dialect;
-import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
+import com.dajudge.buql.query.QueryVisitor;
 
 public class QueryComparePredicate extends BinaryPredicate {
 
@@ -17,7 +16,11 @@ public class QueryComparePredicate extends BinaryPredicate {
     }
 
     @Override
-    public String toSql(final ProjectionSources sources, final Dialect dialect) {
-        return dialect.compareOperator(sources, this, operator.getOperator());
+    public <T> T visit(final QueryVisitor<T> visitor) {
+        return visitor.compare(this);
+    }
+
+    public QueryCompareOperator getOperator() {
+        return operator;
     }
 }

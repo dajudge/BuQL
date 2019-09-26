@@ -77,9 +77,7 @@ public class JdbcDatabaseEngineTest extends DatabaseTest {
         final List<Object> filterParameters = asList(
                 "v1", "ID0"
         );
-        final QueryPredicate predicate = and(
-                compare(new DataColExpression("stringValue"), new FilterColExpression("F0"), EQUALS)
-        );
+        final QueryPredicate predicate = compare(new DataColExpression("stringValue"), new FilterColExpression("F0"), EQUALS);
         final List<String> filterColumns = asList("F0", "ID");
         final Query query = new SelectQuery(projectionColumns, filterParameters, filterColumns, predicate, "mytable");
         assertWith(query)

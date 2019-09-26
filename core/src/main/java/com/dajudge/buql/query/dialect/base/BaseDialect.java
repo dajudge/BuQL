@@ -3,38 +3,22 @@ package com.dajudge.buql.query.dialect.base;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.dialect.SqlCompareOperator;
 import com.dajudge.buql.query.model.QueryWithParameters;
-import com.dajudge.buql.query.model.expression.*;
+import com.dajudge.buql.query.model.expression.DataColExpression;
+import com.dajudge.buql.query.model.expression.FilterColExpression;
 import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
 import com.dajudge.buql.query.model.select.SelectQuery;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.joining;
+import java.util.stream.Collectors;
 
 public abstract class BaseDialect implements Dialect {
-
     @Override
-    public String and(final ProjectionSources sources, final AndPredicate predicate) {
-        return booleanOperator(sources, predicate, "AND");
-    }
-
-    @Override
-    public String or(final ProjectionSources sources, final OrPredicate predicate) {
-        return booleanOperator(sources, predicate, "OR");
-    }
-
-    private String booleanOperator(final ProjectionSources sources, final BooleanOperation predicate, final String op) {
-        final List<QueryPredicate> operands = predicate.getOperands();
-        if (operands.isEmpty()) {
-            throw new IllegalArgumentException("No operands for " + op + " operator");
-        }
-        if (operands.size() == 1) {
-            return operands.get(0).toSql(sources, this);
-        }
-        return "(" + operands.stream().map(it -> it.toSql(sources, this)).collect(joining(op)) + ")";
+    public String booleanOperation(final List<String> operands, final String operator) {
+        return operands.size() == 1 ?
+                operands.get(0) :
+                operands.stream().collect(Collectors.joining(" " + operator + " "));
     }
 
     @Override
@@ -54,12 +38,10 @@ public abstract class BaseDialect implements Dialect {
 
     @Override
     public String compareOperator(
-            final ProjectionSources sources,
-            final BinaryPredicate predicate,
+            final String left,
+            final String right,
             final SqlCompareOperator op
     ) {
-        final String left = predicate.getLeft().toSql(sources, this);
-        final String right = predicate.getRight().toSql(sources, this);
         return op.toSql(left, right);
     }
 
