@@ -6,6 +6,7 @@ public interface QueryCompareOperator {
     QueryCompareOperator EQUALS = () -> SqlCompareOperator.EQUALS;
     QueryCompareOperator LIKE = () -> SqlCompareOperator.LIKE;
     QueryCompareOperator GTE = () -> SqlCompareOperator.GTE;
+    QueryCompareOperator GT = () -> SqlCompareOperator.GT;
 
     SqlCompareOperator getOperator();
 }
