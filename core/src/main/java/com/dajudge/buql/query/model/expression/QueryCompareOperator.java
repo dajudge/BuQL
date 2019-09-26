@@ -5,6 +5,7 @@ import com.dajudge.buql.query.dialect.SqlCompareOperator;
 public interface QueryCompareOperator {
     QueryCompareOperator EQUALS = () -> SqlCompareOperator.EQUALS;
     QueryCompareOperator LIKE = () -> SqlCompareOperator.LIKE;
+    QueryCompareOperator GTE = () -> SqlCompareOperator.GTE;
 
     SqlCompareOperator getOperator();
 }

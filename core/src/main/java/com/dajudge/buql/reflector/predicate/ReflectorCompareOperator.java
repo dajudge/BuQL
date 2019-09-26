@@ -5,6 +5,7 @@ import com.dajudge.buql.query.model.expression.QueryCompareOperator;
 public interface ReflectorCompareOperator {
     ReflectorCompareOperator LIKE = () -> QueryCompareOperator.LIKE;
     ReflectorCompareOperator EQUALS = () -> QueryCompareOperator.EQUALS;
+    ReflectorCompareOperator GTE = () -> QueryCompareOperator.GTE;
 
     QueryCompareOperator getOperator();
 }
