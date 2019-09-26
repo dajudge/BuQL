@@ -8,6 +8,7 @@ public interface QueryCompareOperator {
     QueryCompareOperator GTE = () -> SqlCompareOperator.GTE;
     QueryCompareOperator GT = () -> SqlCompareOperator.GT;
     QueryCompareOperator LT = () -> SqlCompareOperator.LT;
+    QueryCompareOperator LTE = () -> SqlCompareOperator.LTE;
 
     SqlCompareOperator getOperator();
 }

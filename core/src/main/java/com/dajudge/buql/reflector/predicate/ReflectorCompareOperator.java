@@ -8,6 +8,7 @@ public interface ReflectorCompareOperator {
     ReflectorCompareOperator GTE = () -> QueryCompareOperator.GTE;
     ReflectorCompareOperator GT = () -> QueryCompareOperator.GT;
     ReflectorCompareOperator LT = () -> QueryCompareOperator.LT;
+    ReflectorCompareOperator LTE = () -> QueryCompareOperator.LTE;
 
     QueryCompareOperator getOperator();
 }

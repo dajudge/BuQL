@@ -1,6 +1,6 @@
 package com.dajudge.buql.test.operators;
 
-import com.dajudge.buql.reflector.annotations.LessThan;
+import com.dajudge.buql.reflector.annotations.LessThanEquals;
 import com.dajudge.buql.reflector.annotations.Table;
 import com.dajudge.buql.test.shared.BuqlTest;
 import org.junit.Before;
@@ -12,15 +12,15 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class LessThanOperatorTest extends BuqlTest {
-    private static final Map<String, LessThanQueryObject> PARAMS = new HashMap<String, LessThanQueryObject>() {{
-        put("ID0", new LessThanQueryObject(43));
+public class LessThanEqualsOperatorTest extends BuqlTest {
+    private static final Map<String, LessThanEqualsQueryObject> PARAMS = new HashMap<String, LessThanEqualsQueryObject>() {{
+        put("ID0", new LessThanEqualsQueryObject(43));
     }};
     private SomeObjectRepository repository;
 
     @Table("mytable")
     interface SomeObjectRepository {
-        Map<String, List<String>> findStringValueByLessThan(Map<String, LessThanQueryObject> query);
+        Map<String, List<String>> findStringValueByLessThanEquals(Map<String, LessThanEqualsQueryObject> query);
     }
 
     @Before
@@ -29,23 +29,24 @@ public class LessThanOperatorTest extends BuqlTest {
     }
 
     @Test
-    public void less_than_query() {
-        final Map<String, List<String>> result = repository.findStringValueByLessThan(PARAMS);
+    public void less_than_equals_query() {
+        final Map<String, List<String>> result = repository.findStringValueByLessThanEquals(PARAMS);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
-        assertEquals(1, result.get("ID0").size());
+        assertEquals(2, result.get("ID0").size());
         assertTrue(result.get("ID0").contains("v0"));
+        assertTrue(result.get("ID0").contains("v1"));
     }
 
-    public static class LessThanQueryObject {
+    public static class LessThanEqualsQueryObject {
         private final long longValue;
 
-        public LessThanQueryObject(final long longValue) {
+        public LessThanEqualsQueryObject(final long longValue) {
             this.longValue = longValue;
         }
 
-        @LessThan
+        @LessThanEquals
         public long getLongValue() {
             return longValue;
         }
