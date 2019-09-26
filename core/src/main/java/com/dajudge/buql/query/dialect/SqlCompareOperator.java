@@ -4,6 +4,7 @@ public interface SqlCompareOperator {
 
     SqlCompareOperator GTE = new InfixOperator(">=");
     SqlCompareOperator GT = new InfixOperator(">");
+    SqlCompareOperator LT = new InfixOperator("<");
     SqlCompareOperator EQUALS = new InfixOperator("=");
     SqlCompareOperator LIKE = new InfixOperator("LIKE");
 

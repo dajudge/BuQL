@@ -1,6 +1,6 @@
 package com.dajudge.buql.test.operators;
 
-import com.dajudge.buql.reflector.annotations.GreaterThan;
+import com.dajudge.buql.reflector.annotations.LessThan;
 import com.dajudge.buql.reflector.annotations.Table;
 import com.dajudge.buql.test.shared.BuqlTest;
 import org.junit.Before;
@@ -12,15 +12,15 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class GreaterThanOperatorTest extends BuqlTest {
-    private static final Map<String, GreaterThanQueryObject> PARAMS = new HashMap<String, GreaterThanQueryObject>() {{
-        put("ID0", new GreaterThanQueryObject(42));
+public class LessThanOperatorTest extends BuqlTest {
+    private static final Map<String, LessThanQueryObject> PARAMS = new HashMap<String, LessThanQueryObject>() {{
+        put("ID0", new LessThanQueryObject(43));
     }};
     private SomeObjectRepository repository;
 
     @Table("mytable")
     interface SomeObjectRepository {
-        Map<String, List<String>> findStringValueByGreaterThan(Map<String, GreaterThanQueryObject> query);
+        Map<String, List<String>> findStringValueByLessThan(Map<String, LessThanQueryObject> query);
     }
 
     @Before
@@ -30,22 +30,22 @@ public class GreaterThanOperatorTest extends BuqlTest {
 
     @Test
     public void greater_than_query() {
-        final Map<String, List<String>> result = repository.findStringValueByGreaterThan(PARAMS);
+        final Map<String, List<String>> result = repository.findStringValueByLessThan(PARAMS);
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
         assertEquals(1, result.get("ID0").size());
-        assertTrue(result.get("ID0").contains("v1"));
+        assertTrue(result.get("ID0").contains("v0"));
     }
 
-    public static class GreaterThanQueryObject {
+    public static class LessThanQueryObject {
         private final long longValue;
 
-        public GreaterThanQueryObject(final long longValue) {
+        public LessThanQueryObject(final long longValue) {
             this.longValue = longValue;
         }
 
-        @GreaterThan
+        @LessThan
         public long getLongValue() {
             return longValue;
         }

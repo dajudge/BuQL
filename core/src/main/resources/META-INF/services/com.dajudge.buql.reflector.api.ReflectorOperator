@@ -1,3 +1,4 @@
 com.dajudge.buql.reflector.model.operator.LikeOperator
 com.dajudge.buql.reflector.model.operator.GreaterThanEqualsOperator
 com.dajudge.buql.reflector.model.operator.GreaterThanOperator
+com.dajudge.buql.reflector.model.operator.LessThanOperator
