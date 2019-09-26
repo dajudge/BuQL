@@ -7,6 +7,7 @@ public interface SqlCompareOperator {
     SqlCompareOperator LT = new InfixOperator("<");
     SqlCompareOperator LTE = new InfixOperator("<=");
     SqlCompareOperator EQUALS = new InfixOperator("=");
+    SqlCompareOperator NOT_EQUALS = new InfixOperator("<>");
     SqlCompareOperator LIKE = new InfixOperator("LIKE");
 
     String toSql(String operand1, String operand2);
