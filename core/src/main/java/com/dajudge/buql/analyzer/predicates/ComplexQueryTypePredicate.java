@@ -1,8 +1,8 @@
 package com.dajudge.buql.analyzer.predicates;
 
-import com.dajudge.buql.reflector.predicate.TypePredicate;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicateVisitor;
+import com.dajudge.buql.reflector.predicate.TypePredicate;
 
 public class ComplexQueryTypePredicate implements ReflectorPredicate {
     private final Class<?> queryClass;
