@@ -45,11 +45,54 @@ public class AnalyzersTest extends BuqlTest {
         List<FullResultObject> findByStringValue(String query);
 
         List<String> findStringValueByLongValue(long query);
+
+
+        String getStringValueByComplexQuery(SimpleQueryObject query);
+
+        FullResultObject getByComplexQuery(SimpleQueryObject query);
+
+        List<FullResultObject> findByComplexQuery(SimpleQueryObject query);
+
+        List<String> findStringValueByComplexQuery(SimpleQueryObject query);
     }
 
     @Before
     public void setup() {
         repository = buql.up(SomeObjectRepository.class);
+    }
+
+    @Test
+    public void single_complex_to_many_primitive() {
+        final List<String> result = repository.findStringValueByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("v0", result.get(0));
+    }
+
+    @Test
+    public void single_complex_to_many_complex() {
+        final List<FullResultObject> result = repository.findByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(42l, result.get(0).getLongValue());
+    }
+
+    @Test
+    public void single_complex_to_unique_complex() {
+        final FullResultObject result = repository.getByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
+
+        assertNotNull(result);
+        assertNotNull("v0", result.getStringValue());
+    }
+
+    @Test
+    public void single_complex_to_unique_primitive() {
+        final String result = repository.getStringValueByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
+
+        assertNotNull(result);
+        assertNotNull("v0", result);
     }
 
     @Test
@@ -77,7 +120,6 @@ public class AnalyzersTest extends BuqlTest {
         assertNotNull(result);
         assertNotNull("v0", result.getStringValue());
     }
-
 
     @Test
     public void single_primitive_to_unique_primitive() {

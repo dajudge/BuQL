@@ -28,6 +28,13 @@ public final class QueryTypeExtractors {
             return captor.getCapturedType().orElse(null);
         });
     }
+    public static Optional<Type> extractFromSingleComplex(final Method method) {
+        return extract(method, t -> {
+            final TypeCaptor captor = new TypeCaptor();
+            captor.captureIf(isComplexType()).test(t);
+            return captor.getCapturedType().orElse(null);
+        });
+    }
 
     private static Optional<Type> extractFromBulkMap(final Method method, final Predicate<Type> queryTypePredicate) {
         return extract(method, t -> {

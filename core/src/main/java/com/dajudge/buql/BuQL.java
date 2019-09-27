@@ -27,7 +27,11 @@ public class BuQL {
             new SinglePrimitiveToUniquePrimitiveSelectAnalyzer(),
             new SinglePrimitiveToUniqueComplexSelectAnalyzer(),
             new SinglePrimitiveToManyComplexSelectAnalyzer(),
-            new SinglePrimitiveToManyPrimitiveSelectAnalyzer()
+            new SinglePrimitiveToManyPrimitiveSelectAnalyzer(),
+            new SingleComplexToUniquePrimitiveSelectAnalyzer(),
+            new SingleComplexToUniqueComplexSelectAnalyzer(),
+            new SingleComplexToManyPrimitiveSelectAnalyzer(),
+            new SingleComplexToManyComplexSelectAnalyzer()
     );
     private final Dialect dialect;
     private final DatabaseEngine engine;
