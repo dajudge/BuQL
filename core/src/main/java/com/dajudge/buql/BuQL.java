@@ -21,9 +21,12 @@ public class BuQL {
     private static final Collection<Analyzer> CONVERTERS = asList(
             new BulkComplexToManyComplexSelectAnalyzer(),
             new BulkComplexToUniqueComplexSelectAnalyzer(),
+            new BulkComplexToManyPrimitiveSelectAnalyzer(),
+            new BulkComplexToUniquePrimitiveSelectAnalyzer(),
+            new BulkPrimitiveToManyPrimitiveSelectAnalyzer(),
             new BulkPrimitiveToUniqueComplexSelectAnalyzer(),
             new BulkPrimitiveToUniquePrimitiveSelectAnalyzer(),
-            new BulkComplexToManyPrimitiveSelectAnalyzer(),
+            new BulkPrimitiveToManyComplexSelectAnalyzer(),
             new SinglePrimitiveToUniquePrimitiveSelectAnalyzer(),
             new SinglePrimitiveToUniqueComplexSelectAnalyzer(),
             new SinglePrimitiveToManyComplexSelectAnalyzer(),

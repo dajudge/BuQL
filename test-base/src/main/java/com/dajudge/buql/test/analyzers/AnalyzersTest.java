@@ -28,15 +28,23 @@ public class AnalyzersTest extends BuqlTest {
 
     @Table("mytable")
     interface SomeObjectRepository {
-        Map<String, List<FullResultObject>> findByComplexQuery(Map<String, SimpleQueryObject> query);
-
         Map<String, FullResultObject> getByComplexQuery(Map<String, SimpleQueryObject> query);
 
-        Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
+        Map<String, Long> getLongValueByComplexQuery(Map<String, SimpleQueryObject> query);
+
+        Map<String, List<FullResultObject>> findByComplexQuery(Map<String, SimpleQueryObject> query);
 
         Map<String, List<String>> findStringValueByComplexQuery(Map<String, SimpleQueryObject> query);
 
+
+        Map<String, FullResultObject> getByLongValue(Map<String, Long> query);
+
         Map<String, String> getStringValueByLongValue(Map<String, Long> query);
+
+        Map<String, List<FullResultObject>> findByLongValue(Map<String, Long> query);
+
+        Map<String, List<String>> findStringValueByLongValue(Map<String, Long> query);
+
 
         String getStringValueByLongValue(long query);
 
@@ -84,7 +92,7 @@ public class AnalyzersTest extends BuqlTest {
         final FullResultObject result = repository.getByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
 
         assertNotNull(result);
-        assertNotNull("v0", result.getStringValue());
+        assertEquals("v0", result.getStringValue());
     }
 
     @Test
@@ -92,7 +100,7 @@ public class AnalyzersTest extends BuqlTest {
         final String result = repository.getStringValueByComplexQuery(COMPLEX_PARAMS_ONE_RESULT.get("ID0"));
 
         assertNotNull(result);
-        assertNotNull("v0", result);
+        assertEquals("v0", result);
     }
 
     @Test
@@ -118,7 +126,7 @@ public class AnalyzersTest extends BuqlTest {
         final FullResultObject result = repository.getByLongValue(42);
 
         assertNotNull(result);
-        assertNotNull("v0", result.getStringValue());
+        assertEquals("v0", result.getStringValue());
     }
 
     @Test
@@ -126,7 +134,7 @@ public class AnalyzersTest extends BuqlTest {
         final String result = repository.getStringValueByLongValue(42);
 
         assertNotNull(result);
-        assertNotNull("v0", result);
+        assertEquals("v0", result);
     }
 
     @Test
@@ -136,7 +144,16 @@ public class AnalyzersTest extends BuqlTest {
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
         assertEquals(1, result.get("ID0").size());
-        assertNotNull("v0", result.get("ID0").get(0));
+        assertEquals("v0", result.get("ID0").get(0));
+    }
+
+    @Test
+    public void bulk_complex_to_unqiue_primitive() {
+        final Map<String, Long> result = repository.getLongValueByComplexQuery(COMPLEX_PARAMS_ONE_RESULT);
+
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals(42l, (long)result.get("ID0"));
     }
 
     @Test
@@ -145,7 +162,17 @@ public class AnalyzersTest extends BuqlTest {
 
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
-        assertNotNull("v0", result.get("ID0").getStringValue());
+        assertEquals("v0", result.get("ID0").getStringValue());
+    }
+
+    @Test
+    public void bulk_primitive_to_many_complex() {
+        final Map<String, List<FullResultObject>> result = repository.findByLongValue(PRIMITIVE_PARAMS_ONE_RESULT);
+
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals(1, result.get("ID0").size());
+        assertEquals("v0", result.get("ID0").get(0).getStringValue());
     }
 
     @Test
@@ -174,6 +201,17 @@ public class AnalyzersTest extends BuqlTest {
         assertNotNull(result);
         assertNotNull(result.get("ID0"));
         assertEquals("v0", result.get("ID0"));
+    }
+
+
+    @Test
+    public void bulk_primitive_to_many_primitive() {
+        final Map<String, List<String>> result = repository.findStringValueByLongValue(PRIMITIVE_PARAMS_ONE_RESULT);
+
+        assertNotNull(result);
+        assertNotNull(result.get("ID0"));
+        assertEquals(1, result.get("ID0").size());
+        assertEquals("v0", result.get("ID0").get(0));
     }
 
     @Test
