@@ -39,12 +39,24 @@ public class AnalyzersTest extends BuqlTest {
         Map<String, String> getStringValueByLongValue(Map<String, Long> query);
 
         String getStringValueByLongValue(long query);
+
+        FullResultObject getByLongValue(long query);
     }
 
     @Before
     public void setup() {
         repository = buql.up(SomeObjectRepository.class);
     }
+
+
+    @Test
+    public void single_primitive_to_unique_complex() {
+        final FullResultObject result = repository.getByLongValue(42);
+
+        assertNotNull(result);
+        assertNotNull("v0", result.getStringValue());
+    }
+
 
     @Test
     public void single_primitive_to_unique_primitive() {

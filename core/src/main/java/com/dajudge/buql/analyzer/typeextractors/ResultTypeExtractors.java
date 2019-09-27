@@ -26,8 +26,15 @@ public final class ResultTypeExtractors {
     public static Optional<Type> extractToPrimitiveManyMap(final Method method) {
         return extractToManyMap(method, isPrimitiveType());
     }
+
     public static Optional<Type> extractToPrimitiveSingle(final Method method) {
         return isPrimitiveType().test(method.getGenericReturnType()) ?
+                Optional.of(method.getGenericReturnType()) :
+                Optional.empty();
+    }
+
+    public static Optional<Type> extractToComplexSingle(final Method method) {
+        return isComplexType().test(method.getGenericReturnType()) ?
                 Optional.of(method.getGenericReturnType()) :
                 Optional.empty();
     }
