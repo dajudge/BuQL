@@ -39,6 +39,10 @@ public final class ResultTypeExtractors {
                 Optional.empty();
     }
 
+    public static Optional<Type> extractToComplexMany(final Method method) {
+        return extractToMany(method, isComplexType());
+    }
+
     private static Optional<Type> extractToUniqueMap(final Method method, final Predicate<Type> resultTypePredicate) {
         final TypeCaptor captor = new TypeCaptor();
         final Type returnType = method.getGenericReturnType();
@@ -50,6 +54,13 @@ public final class ResultTypeExtractors {
         final TypeCaptor captor = new TypeCaptor();
         final Type returnType = method.getGenericReturnType();
         mapOf(assignableTo(String.class), listOf(captor.captureIf(resultTypePredicate))).test(returnType);
+        return captor.getCapturedType();
+    }
+
+    private static Optional<Type> extractToMany(final Method method, final Predicate<Type> resultTypePredicate) {
+        final TypeCaptor captor = new TypeCaptor();
+        final Type returnType = method.getGenericReturnType();
+        listOf(captor.captureIf(resultTypePredicate)).test(returnType);
         return captor.getCapturedType();
     }
 }
