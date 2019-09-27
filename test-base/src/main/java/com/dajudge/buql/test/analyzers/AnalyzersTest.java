@@ -43,11 +43,22 @@ public class AnalyzersTest extends BuqlTest {
         FullResultObject getByLongValue(long query);
 
         List<FullResultObject> findByStringValue(String query);
+
+        List<String> findStringValueByLongValue(long query);
     }
 
     @Before
     public void setup() {
         repository = buql.up(SomeObjectRepository.class);
+    }
+
+    @Test
+    public void single_primitive_to_many_primitive() {
+        final List<String> result = repository.findStringValueByLongValue(42);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("v0", result.get(0));
     }
 
     @Test

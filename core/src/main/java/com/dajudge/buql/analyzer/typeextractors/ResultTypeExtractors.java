@@ -43,6 +43,10 @@ public final class ResultTypeExtractors {
         return extractToMany(method, isComplexType());
     }
 
+    public static Optional<Type> extractToPrimitiveMany(final Method method) {
+        return extractToMany(method, isPrimitiveType());
+    }
+
     private static Optional<Type> extractToUniqueMap(final Method method, final Predicate<Type> resultTypePredicate) {
         final TypeCaptor captor = new TypeCaptor();
         final Type returnType = method.getGenericReturnType();
