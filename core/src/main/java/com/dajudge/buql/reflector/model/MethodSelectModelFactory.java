@@ -10,6 +10,7 @@ public class MethodSelectModelFactory {
 
     public interface ResultTypeModel<R> {
         List<ResultField<R>> getResultFields();
+
         R newResultInstance(Function<String, Object> columnValues);
     }
 

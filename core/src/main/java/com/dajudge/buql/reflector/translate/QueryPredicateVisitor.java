@@ -16,7 +16,7 @@ public class QueryPredicateVisitor implements ReflectorPredicateVisitor<QueryPre
 
     @Override
     public QueryPredicate booleanOperation(final BooleanOperationPredicate predicate) {
-return        predicate.getOperator().createQueryPredicate(operandsOf(predicate));
+        return predicate.getOperator().createQueryPredicate(operandsOf(predicate));
     }
 
     @Override

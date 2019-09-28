@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class UniquePostProcessor<R> implements Function<Map<String, List<R>>, Map<String, R>> {
+public class UniquePostProcessor<R> implements Function<Map<String, List<R>>, Map<String, ?>> {
     @Override
     public Map<String, R> apply(final Map<String, List<R>> results) {
         final Map<String, R> ret = new HashMap<>();

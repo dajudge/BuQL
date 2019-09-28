@@ -1,20 +1,16 @@
-package com.dajudge.buql.analyzer;
+package com.dajudge.buql.analyzer.select;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public class SingleQueryPreProcessor<Q> implements Function<Object, Map<String, Q>> {
-    private final String id;
-
-    public SingleQueryPreProcessor(final String id) {
-        this.id = id;
-    }
+    public static final String QUERY_ID = "ID";
 
     @Override
     public Map<String, Q> apply(final Object o) {
         return new HashMap<String, Q>() {{
-            put(id, (Q) o);
+            put(QUERY_ID, (Q) o);
         }};
     }
 }

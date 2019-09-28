@@ -23,6 +23,6 @@ public final class StringUtils {
     }
 
     public static String lowercaseFirstLetter(final String fieldName) {
-        return fieldName.substring(0, 1).toLowerCase(US) + fieldName.substring(1);
+        return fieldName.isEmpty() ? "" : fieldName.substring(0, 1).toLowerCase(US) + fieldName.substring(1);
     }
 }

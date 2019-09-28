@@ -1,6 +1,6 @@
 package com.dajudge.buql.analyzer;
 
-import com.dajudge.buql.reflector.model.MethodSelectModelFactory;
+import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
 import com.dajudge.buql.reflector.model.ResultField;
 
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
 
-public class PrimitiveResultTypeModel<R> implements MethodSelectModelFactory.ResultTypeModel<R> {
+public class PrimitiveResultTypeModel<R> implements ResultTypeModel<R> {
 
     private final String fieldName;
 
-    public PrimitiveResultTypeModel(final String fieldName) {
+    private PrimitiveResultTypeModel(final String fieldName) {
         this.fieldName = fieldName;
     }
 
@@ -25,5 +25,9 @@ public class PrimitiveResultTypeModel<R> implements MethodSelectModelFactory.Res
     @Override
     public R newResultInstance(final Function<String, Object> columnValues) {
         return (R) columnValues.apply(fieldName);
+    }
+
+    public static <R> ResultTypeModel<R> create(final Class<R> clazz, final String fieldName) {
+        return new PrimitiveResultTypeModel<>(fieldName);
     }
 }

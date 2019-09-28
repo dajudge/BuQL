@@ -7,8 +7,12 @@ import com.dajudge.buql.reflector.predicate.TypePredicate;
 public class ComplexQueryTypePredicate implements ReflectorPredicate {
     private final Class<?> queryClass;
 
-    public ComplexQueryTypePredicate(final Class<?> queryClass) {
+    private ComplexQueryTypePredicate(final Class<?> queryClass) {
         this.queryClass = queryClass;
+    }
+
+    public static ReflectorPredicate create(final Class<?> queryClass, final String predicateName) {
+        return new ComplexQueryTypePredicate(queryClass);
     }
 
     @Override

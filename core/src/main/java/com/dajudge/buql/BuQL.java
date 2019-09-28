@@ -1,6 +1,7 @@
 package com.dajudge.buql;
 
-import com.dajudge.buql.analyzer.analyzers.*;
+import com.dajudge.buql.analyzer.Analyzer;
+import com.dajudge.buql.analyzer.select.*;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
@@ -11,31 +12,31 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.reflect.Proxy.newProxyInstance;
-import static java.util.Arrays.asList;
 import static java.util.Collections.synchronizedMap;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 
 public class BuQL {
-    private static final Collection<Analyzer> CONVERTERS = asList(
-            new BulkComplexToManyComplexSelectAnalyzer(),
-            new BulkComplexToUniqueComplexSelectAnalyzer(),
-            new BulkComplexToManyPrimitiveSelectAnalyzer(),
-            new BulkComplexToUniquePrimitiveSelectAnalyzer(),
-            new BulkPrimitiveToManyPrimitiveSelectAnalyzer(),
-            new BulkPrimitiveToUniqueComplexSelectAnalyzer(),
-            new BulkPrimitiveToUniquePrimitiveSelectAnalyzer(),
-            new BulkPrimitiveToManyComplexSelectAnalyzer(),
-            new SinglePrimitiveToUniquePrimitiveSelectAnalyzer(),
-            new SinglePrimitiveToUniqueComplexSelectAnalyzer(),
-            new SinglePrimitiveToManyComplexSelectAnalyzer(),
-            new SinglePrimitiveToManyPrimitiveSelectAnalyzer(),
-            new SingleComplexToUniquePrimitiveSelectAnalyzer(),
-            new SingleComplexToUniqueComplexSelectAnalyzer(),
-            new SingleComplexToManyPrimitiveSelectAnalyzer(),
-            new SingleComplexToManyComplexSelectAnalyzer()
-    );
+    private static final Collection<Analyzer> CONVERTERS =
+            Stream.of(QueryMultiplicity.values()).map(queryMultiplicity ->
+                    Stream.of(QueryTypeComplexity.values()).map(queryTypeComplexity ->
+                            Stream.of(ResultMultiplicity.values()).map(resultMultiplicity ->
+                                    Stream.of(ResultTypeComplexity.values()).map(resultTypeComplexity ->
+                                            new SyncParamToReturnValueSelectAnalyzer<>(
+                                                    queryMultiplicity,
+                                                    queryTypeComplexity,
+                                                    resultMultiplicity,
+                                                    resultTypeComplexity
+                                            )))
+                                    .flatMap(identity()))
+                            .flatMap(identity()))
+                    .flatMap(identity())
+                    .collect(Collectors.toList());
+
     private final Dialect dialect;
     private final DatabaseEngine engine;
     private final Map<Method, ReflectSelectQuery<?, ?>> cachedQueries = synchronizedMap(new HashMap<>());

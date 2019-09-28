@@ -12,13 +12,15 @@ import static java.util.stream.Collectors.toList;
 
 public class ComplexResultTypeModel<R> implements MethodSelectModelFactory.ResultTypeModel<R> {
     public interface ResultFieldModel<R> {
-           ResultField<R> getResultField();
-           void setFieldValue(R object, Object value);
+        ResultField<R> getResultField();
+
+        void setFieldValue(R object, Object value);
     }
+
     private final List<ResultFieldModel<R>> fields;
     private final Class<R> clazz;
 
-    public ComplexResultTypeModel(final Class<R> clazz) {
+    private ComplexResultTypeModel(final Class<R> clazz) {
         this.clazz = clazz;
         this.fields = createComplexResultFieldsAnalyzer(clazz);
     }
@@ -43,5 +45,9 @@ public class ComplexResultTypeModel<R> implements MethodSelectModelFactory.Resul
                 | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Cannot instantiate result type instance", e);
         }
+    }
+
+    public static <R> MethodSelectModelFactory.ResultTypeModel<R> create(final Class<R> clazz, final String fieldName) {
+        return new ComplexResultTypeModel<>(clazz);
     }
 }

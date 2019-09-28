@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ExplicitTypeReflector  {
+public class ExplicitTypeReflector {
     private final BeanInfo bean;
     private final Function<Object, Object> parentAccessor;
 

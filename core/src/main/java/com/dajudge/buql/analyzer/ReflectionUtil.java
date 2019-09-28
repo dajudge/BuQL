@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer.typeextractors;
+package com.dajudge.buql.analyzer;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 
-final class ReflectionUtil {
+public final class ReflectionUtil {
     private static final Collection<Class<?>> PRIMITIVE_TYPES = asList(
             String.class,
             byte.class, Byte.class,
@@ -23,7 +23,7 @@ final class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    static Predicate<Type> mapOf(
+    private static Predicate<Type> mapOf(
             final Predicate<Type> keyTypePredicate,
             final Predicate<Type> valueTypePredicate
     ) {
@@ -41,7 +41,7 @@ final class ReflectionUtil {
         };
     }
 
-    static Predicate<Type> listOf(final Predicate<Type> valueTypePredicate) {
+    public static Predicate<Type> listOf(final Predicate<Type> valueTypePredicate) {
         return listType -> {
             if (!(listType instanceof ParameterizedType)) {
                 return false;
@@ -54,7 +54,7 @@ final class ReflectionUtil {
         };
     }
 
-    static Predicate<Type> assignableTo(final Class<?> clazz) {
+    private static Predicate<Type> assignableTo(final Class<?> clazz) {
         return type -> {
             if (!(type instanceof Class)) {
                 return false;
@@ -63,27 +63,27 @@ final class ReflectionUtil {
         };
     }
 
-    static Predicate<Type> isPrimitiveType() {
+    public static Predicate<Type> isPrimitiveType() {
         return type -> type instanceof Class && PRIMITIVE_TYPES.stream()
                 .anyMatch(it -> it.isAssignableFrom((Class) type));
     }
 
-    static Predicate<Type> isClass() {
+    private static Predicate<Type> isClass() {
         return type -> type instanceof Class;
     }
 
-    static Predicate<Type> isComplexType() {
+    public static Predicate<Type> isComplexType() {
         return isClass().and(isPrimitiveType().negate());
     }
 
-    static class TypeCaptor {
+    public static Predicate<Type> mapOfStringTo(final Predicate<Type> v) {
+        return mapOf(assignableTo(String.class), v);
+    }
+
+    public static class TypeCaptor {
         private Type type;
 
-        public Predicate<Type> capture() {
-            return captureIf(t -> true);
-        }
-
-        Predicate<Type> captureIf(final Predicate<Type> passThrough) {
+        public Predicate<Type> captureIf(final Predicate<Type> passThrough) {
             return type -> {
                 final boolean result = passThrough.test(type);
                 if (result) {
@@ -93,7 +93,7 @@ final class ReflectionUtil {
             };
         }
 
-        Optional<Type> getCapturedType() {
+        public Optional<Type> getCapturedType() {
             return Optional.ofNullable(type);
         }
     }

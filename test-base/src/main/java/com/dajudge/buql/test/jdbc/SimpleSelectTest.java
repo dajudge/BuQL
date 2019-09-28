@@ -1,6 +1,6 @@
 package com.dajudge.buql.test.jdbc;
 
-import com.dajudge.buql.analyzer.BulkPreProcessor;
+import com.dajudge.buql.analyzer.select.BulkQueryPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
 import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
@@ -28,9 +28,9 @@ public class SimpleSelectTest extends DatabaseTest {
         final Class<SimpleQueryObject> queryType = SimpleQueryObject.class;
         final Class<FullResultObject> resultType = FullResultObject.class;
         final Function<Map<String, List<FullResultObject>>, ? extends Object> postProcessor = Function.identity();
-        final ReflectorPredicate predicate = new ComplexQueryTypePredicate(queryType);
-        final ResultTypeModel<FullResultObject> resultTypeModel = new ComplexResultTypeModel<>(resultType);
-        final BulkPreProcessor<SimpleQueryObject> preProcessor = new BulkPreProcessor<>();
+        final ReflectorPredicate predicate = ComplexQueryTypePredicate.create(queryType, null);
+        final ResultTypeModel<FullResultObject> resultTypeModel = ComplexResultTypeModel.create(resultType, null);
+        final BulkQueryPreProcessor<SimpleQueryObject> preProcessor = new BulkQueryPreProcessor<>();
         final MethodSelectModel<SimpleQueryObject, FullResultObject> model = createSelectModel(
                 "mytable",
                 predicate,

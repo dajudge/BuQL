@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer.analyzers;
+package com.dajudge.buql.analyzer;
 
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 

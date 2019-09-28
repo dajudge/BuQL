@@ -1,7 +1,7 @@
 package com.dajudge.buql.query.dialect.postgres;
 
-import com.dajudge.buql.query.dialect.base.BaseDialect;
 import com.dajudge.buql.query.dialect.BaseQueryWriterTest;
+import com.dajudge.buql.query.dialect.base.BaseDialect;
 
 public class PostgresSelectQueryWriterTest extends BaseQueryWriterTest {
     @Override

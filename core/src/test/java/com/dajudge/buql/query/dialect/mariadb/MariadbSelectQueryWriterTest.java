@@ -1,7 +1,7 @@
 package com.dajudge.buql.query.dialect.mariadb;
 
-import com.dajudge.buql.query.dialect.base.BaseDialect;
 import com.dajudge.buql.query.dialect.BaseQueryWriterTest;
+import com.dajudge.buql.query.dialect.base.BaseDialect;
 
 public class MariadbSelectQueryWriterTest extends BaseQueryWriterTest {
     @Override

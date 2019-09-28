@@ -11,8 +11,12 @@ import static java.util.function.Function.identity;
 public class PrimitiveQueryTypePredicate implements ReflectorPredicate {
     private final String colName;
 
-    public PrimitiveQueryTypePredicate(final String colName) {
+    private PrimitiveQueryTypePredicate(final String colName) {
         this.colName = colName;
+    }
+
+    public static ReflectorPredicate create(final Class<?> actualQueryClass, final String predicateName) {
+        return new PrimitiveQueryTypePredicate(predicateName);
     }
 
     @Override

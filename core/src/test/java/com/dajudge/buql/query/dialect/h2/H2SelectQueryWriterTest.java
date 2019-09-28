@@ -1,7 +1,7 @@
 package com.dajudge.buql.query.dialect.h2;
 
-import com.dajudge.buql.query.dialect.base.BaseDialect;
 import com.dajudge.buql.query.dialect.BaseQueryWriterTest;
+import com.dajudge.buql.query.dialect.base.BaseDialect;
 
 public class H2SelectQueryWriterTest extends BaseQueryWriterTest {
     @Override

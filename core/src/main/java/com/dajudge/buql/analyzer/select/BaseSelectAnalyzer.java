@@ -1,5 +1,6 @@
-package com.dajudge.buql.analyzer.analyzers;
+package com.dajudge.buql.analyzer.select;
 
+import com.dajudge.buql.analyzer.Analyzer;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.MethodSelectModel;
 import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
@@ -16,29 +17,33 @@ import java.util.regex.Pattern;
 
 import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
+import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 
-public abstract class BaseSelectAnalyzer implements Analyzer {
-private final Pattern methodNamePattern;
+public abstract class BaseSelectAnalyzer<Q, R> implements Analyzer {
+    private final Pattern methodNamePattern;
 
-    protected BaseSelectAnalyzer(final Pattern methodNamePattern) {
+    BaseSelectAnalyzer(final Pattern methodNamePattern) {
         this.methodNamePattern = methodNamePattern;
     }
 
     @Override
     public Optional<ReflectSelectQuery<?, ?>> convert(final String tableName, final Method method) {
-        final Optional<Type> queryType = extractQueryType(method);
-        final Optional<Type> resultType = extractResultType(method);
+        final Optional<Type> queryType = extractQueryType(method.getGenericParameterTypes()[0]);
+        final Optional<Type> resultType = extractResultType(method.getGenericReturnType());
         final Matcher methodNameMatcher = matchMethodName(method);
         if (!appliesTo(queryType, resultType, methodNameMatcher)) {
             return Optional.empty();
         }
-        final Class<?> actualQueryClass = (Class<?>) queryType.get();
-        final Class<?> actualResultClass = (Class<?>) resultType.get();
-        final ReflectorPredicate predicate = createPredicate(method, actualQueryClass, methodNameMatcher);
-        final MethodSelectModel<?, ?> model = createSelectModel(
+        final Class<Q> actualQueryClass = (Class<Q>) queryType.get();
+        final Class<R> actualResultClass = (Class<R>) resultType.get();
+        final String queryFieldName = lowercaseFirstLetter(methodNameMatcher.group(2));
+        final ReflectorPredicate predicate = createPredicate(actualQueryClass, queryFieldName);
+        final String resultFieldName = lowercaseFirstLetter(methodNameMatcher.group(1));
+        final ResultTypeModel<R> resultFieldsModel = createResultFieldsModel(actualResultClass, resultFieldName);
+        final MethodSelectModel<Q, R> model = createSelectModel(
                 tableName,
                 predicate,
-                createResultFieldsModel(actualResultClass, methodNameMatcher),
+                resultFieldsModel,
                 createPreProcessor(),
                 createPostProcessor()
         );
@@ -52,24 +57,23 @@ private final Pattern methodNamePattern;
         return methodNameMatches && queryTypeMatches && resultTypeMatches;
     }
 
-    protected abstract <Q> Function<Object, Map<String, Q>> createPreProcessor();
+    protected abstract Function<Object, Map<String, Q>> createPreProcessor();
 
-    protected abstract <R> ResultTypeModel<R> createResultFieldsModel(
+    protected abstract ResultTypeModel<R> createResultFieldsModel(
             final Class<R> clazz,
-            final Matcher methodNameMatcher
+            final String resultFieldName
     );
 
-    protected abstract <T> Function<Map<String, List<T>>, ?> createPostProcessor();
+    protected abstract Function<Map<String, List<R>>, ?> createPostProcessor();
 
     protected abstract ReflectorPredicate createPredicate(
-            final Method method,
             final Class<?> actualQueryClass,
-            final Matcher methodNameMatcher
+            final String predicateName
     );
 
-    protected abstract Optional<Type> extractResultType(final Method method);
+    protected abstract Optional<Type> extractResultType(final Type resultType);
 
-    protected abstract Optional<Type> extractQueryType(final Method method);
+    protected abstract Optional<Type> extractQueryType(final Type queryType);
 
     private Matcher matchMethodName(final Method method) {
         return methodNamePattern.matcher(method.getName());
