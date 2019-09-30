@@ -1,0 +1,147 @@
+= BuQL documentation
+:author:Alexander Stockinger
+:email: mail@alexstockinger.de
+:sectnums:
+:toc:
+:toclevels: 2
+:toc-title: Table of contents
+
+== Overview
+At the very core of BuQL is the concept of packing as many queries as possible into a single SQL statement. This holds
+especially true for retrieving data from the database with `SELECT` statements.
+
+=== Query bulk execution with Table Value Constructors
+`SELECT` statements are optimized (where possible) by BuQL for bulk execution by leveraging a SQL construct called
+_Table Value Contructors_.
+
+Assume the following two `SELECT` statements:
+
+[#src-listing]
+[source,SQL]
+----
+SELECT
+    P.firstName, P.lastName
+FROM
+    Person P
+WHERE
+    P.departmentId = 17 AND P.jobLevel > 2;
+
+SELECT
+    P.firstName, P.lastName
+FROM
+    Person P
+WHERE
+    P.departmentId = 42 AND P.jobLevel > 7;
+----
+While identical in structure, these two queries (and their results) usually are transmitted and executed separately
+to the database.
+
+These two queries could be merged into one single `SELECT` statements using a _Table Value Constructor_ (I'm using
+PostgreSQL's syntax here):
+
+[#src-listing]
+[source,SQL]
+----
+SELECT
+    Q.Q_ID, P.firstName, P.lastName
+FROM
+    (VALUES ('Q1', 17, 2), ('Q2', 42, 7)) AS Q(Q_ID, Q1, Q2),
+    Person P
+WHERE
+    P.departmentId = Q1 AND P.jobLevel > Q2
+----
+
+As you can see we're now packing the parameters of both the queries' predicates into a temporary table-like structure
+embedded directly in the `SELECT` statement, using the first column of the constructed table as an identifier of the
+query parameter set.
+
+Using this pattern of `SELECT` statement of using the _Table Value Constructor_ for passing multiple sets of parameter
+parameters for queries with the same structure at once we can almost arbitrarily increase the number of queries we can
+pack into a single database request. In fact, BuQL is only limited by the number of parameters that can be passed
+to the database in one query - and resorts to executing multiple database queries only if this threshold is exceeded by
+the number of queries you're throwing at it.
+
+=== Supported databases
+Not all SQL RDBMS support the _Table Value Constructor_ which currently is the prerequisite for efficient query
+execution with BuQL. And those that do tend to use custom syntax variations that make it very hard to impossible to
+write a generic implementation. BuQL thus implements a different SQL dialect generator for each supported SQL database.
+
+The list of supported databases currently contains:
+
+* H2
+* PostgreSQL (with PostGIS extension)
+* MariaDB
+
+=== Repository interfaces
+While the usage of _Table Value Constructors_ in SQL queries can greatly improve DB access efficiency, it certainly is
+not the most straight-forward and easy way to request data from a database.
+
+BuQL sets out to make bulk data querying easy by letting you use simple Java interfaces and POJOs to express the DB
+queries your application needs to execute.
+
+==== Bulk querying with repository interfaces
+Java's `Map` interface is used to express the concept of querying multiple datasets with one query from the database.
+BuQL uses method parameters and return values for type `Map<String, ?>` to pass in the query parameters and return
+the query results - the `String` key allows you to correlate the returned data to the query parameters you passed in.
+
+Take a look at the following repository interface definition:
+
+[#src-listing]
+[source,java]
+----
+@Table("Person")
+public interface PersonRepository {
+
+    // The POJO used to pass the query parameter values
+    class DepartmentAndJobLevel {
+        private final int departmentId;
+        private final int jobLevel;
+
+        public DepartmentAndJobLevel(int departmentId, int jobLevel) {
+            this.departmentId = departmentId;
+            this.jobLevel = jobLevel;
+        }
+
+        @GreaterThan // This specifies the operator to apply in the query
+        public int getJobLevel() {
+            return jobLevel;
+        }
+
+        // If you don't specify an operator the default operator '=' is used
+        public int getDepartmentId() {
+            return departmentId;
+        }
+    }
+
+    // The POJO used to return query results
+    class PersonResult {
+        private String firstName;
+        private String lastName;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+    }
+
+    Map<String, List<PersonResult>> findByDepartmentAndJobLevel(Map<String, DepartmentAndJobLevel> query);
+}
+----
+TODO
+
+==== Using Java's primitive types for simple queries
+TODO
+
+==== Non-bulk queries with BuQL
+TODO
