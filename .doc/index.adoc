@@ -191,10 +191,16 @@ In order to execute the query of the previous example we'd need to write the fol
 [source,java]
 ----
 // Assume BuQL is already initialized properly
+
+// Get BuQL's implementation of the repository interface
 PersonRepository repository = buql.up();
+
+// Define the query parameters in a map
 Map<String, DepartmentAndJobLevel> queryParams = new HashMap<>();
 queryParams.put("ID1", new DepartmentAndJobLevel(17, 2));
 queryParams.put("ID1", new DepartmentAndJobLevel(42, 7));
+
+// Execute the query
 Map<String, List<PersonResult>> results = repository.findByDepartmentAndJobLevel(queryParams);
 ----
 
