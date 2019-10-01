@@ -4,7 +4,6 @@
 :sectnums:
 :toc:
 :toclevels: 2
-:toc-title: Table of contents
 
 == Overview
 At the very core of BuQL is the concept of packing as many queries as possible into a single SQL statement. This holds
@@ -14,7 +13,19 @@ especially true for retrieving data from the database with `SELECT` statements.
 `SELECT` statements are optimized (where possible) by BuQL for bulk execution by leveraging a SQL construct called
 _Table Value Contructors_.
 
-Assume the following two `SELECT` statements:
+Assume the following database contents:
+
+.`Person`
+|===
+|firstName |lastName |departmentId |jobLevel
+
+|Tony  |Stark  |17 | 3
+|Bruce |Wayne  |17 | 2
+|Peter |Parker |42 | 7
+|Clark |Kent   |42 | 9
+|===
+
+Given the above database contents let's have a look at the following two queries:
 
 [#src-listing]
 [source,SQL]
@@ -25,7 +36,16 @@ FROM
     Person P
 WHERE
     P.departmentId = 17 AND P.jobLevel > 2;
+----
+----
+P.firstName | P.lastName
+------------------------
+Tony        | Stark
+----
 
+[#src-listing]
+[source,SQL]
+----
 SELECT
     P.firstName, P.lastName
 FROM
@@ -33,10 +53,16 @@ FROM
 WHERE
     P.departmentId = 42 AND P.jobLevel > 7;
 ----
+----
+P.firstName | P.lastName
+------------------------
+Clark       | Kent
+----
 While identical in structure, these two queries (and their results) usually are transmitted and executed separately
 to the database.
 
-These two queries could be merged into one single `SELECT` statements using a _Table Value Constructor_ (I'm using
+
+These two queries could be merged into one single `SELECT` statement using a _Table Value Constructor_ (I'm using
 PostgreSQL's syntax here):
 
 [#src-listing]
@@ -45,15 +71,22 @@ PostgreSQL's syntax here):
 SELECT
     Q.Q_ID, P.firstName, P.lastName
 FROM
-    (VALUES ('Q1', 17, 2), ('Q2', 42, 7)) AS Q(Q_ID, Q1, Q2),
+    (VALUES ('ID1', 17, 2), ('ID2', 42, 7)) AS Q(Q_ID, Q1, Q2),
     Person P
 WHERE
-    P.departmentId = Q1 AND P.jobLevel > Q2
+    P.departmentId =Q.Q1 AND P.jobLevel > Q.Q2;
+----
+----
+Q.Q_ID | P.firstName | P.lastName
+----------------------------------
+ID1    | Tony        | Stark
+ID2    | Clark       | Kent
 ----
 
 As you can see we're now packing the parameters of both the queries' predicates into a temporary table-like structure
-embedded directly in the `SELECT` statement, using the first column of the constructed table as an identifier of the
-query parameter set.
+embedded directly in the `SELECT` statement, using the first column of the constructed table as an artificial
+identifier (`ID1` and `ID2`) of the  query parameter set. The result set contains the results of both previous
+queries which can be identified by the artificially introduced identitifer column.
 
 Using this pattern of `SELECT` statement of using the _Table Value Constructor_ for passing multiple sets of parameter
 parameters for queries with the same structure at once we can almost arbitrarily increase the number of queries we can
@@ -138,7 +171,12 @@ public interface PersonRepository {
     Map<String, List<PersonResult>> findByDepartmentAndJobLevel(Map<String, DepartmentAndJobLevel> query);
 }
 ----
-TODO
+
+It consists of one query method that uses both a _query type_ (`DepartmentAndJobLevel`) and a result type
+(`PersonResult`) - both  types for the sake of compactness modelled as subclasses of our repository interface.
+
+The repository interface itself is decorate with the `@Table` annotation that BuQL requires to know which database table
+to query.
 
 ==== Using Java's primitive types for simple queries
 TODO
