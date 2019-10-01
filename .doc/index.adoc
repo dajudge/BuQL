@@ -178,6 +178,26 @@ It consists of one query method that uses both a _query type_ (`DepartmentAndJob
 The repository interface itself is decorate with the `@Table` annotation that BuQL requires to know which database table
 to query.
 
+The single parameter of type `Map<String, DepartmentAndJobLevel>` is used to pass in the query parameters for the SQL
+query.
+
+The result type `Map<String, List<PersonResult>>` indicates that we're potentially expecting multiple results
+per query object (hence the collection type `List<PersonResult>` as the map's value). This also manifests in the
+method name's `find` prefix (unique / single result queries in BuQL are prefixed with `get` instead).
+
+In order to execute the query of the previous example we'd need to write the following Java code:
+
+[#src-listing]
+[source,java]
+----
+// Assume BuQL is already initialized properly
+PersonRepository repository = buql.up();
+Map<String, DepartmentAndJobLevel> queryParams = new HashMap<>();
+queryParams.put("ID1", new DepartmentAndJobLevel(17, 2));
+queryParams.put("ID1", new DepartmentAndJobLevel(42, 7));
+Map<String, List<PersonResult>> results = repository.findByDepartmentAndJobLevel(queryParams);
+----
+
 ==== Using Java's primitive types for simple queries
 TODO
 
