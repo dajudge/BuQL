@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer.predicates;
+package com.dajudge.buql.analyzer.predicate;
 
 import com.dajudge.buql.reflector.predicate.DatabaseFieldExpression;
 import com.dajudge.buql.reflector.predicate.ParameterExpression;

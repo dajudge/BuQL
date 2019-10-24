@@ -2,7 +2,7 @@ package com.dajudge.buql.analyzer;
 
 import com.dajudge.buql.analyzer.ComplexResultTypeModel.ResultFieldModel;
 import com.dajudge.buql.reflector.annotations.Transient;
-import com.dajudge.buql.reflector.model.ResultField;
+import com.dajudge.buql.reflector.model.select.ResultField;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

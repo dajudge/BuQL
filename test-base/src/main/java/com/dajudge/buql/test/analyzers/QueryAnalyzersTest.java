@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class AnalyzersTest extends BuqlTest {
+public class QueryAnalyzersTest extends BuqlTest {
     private static final HashMap<String, SimpleQueryObject> COMPLEX_PARAMS_ONE_RESULT = new HashMap<String, SimpleQueryObject>() {{
         put("ID0", new SimpleQueryObject(42));
     }};

@@ -91,7 +91,7 @@ public class JdbcDatabaseEngineTest extends DatabaseTest {
 
     private QueryResultAssertions assertWith(final Query query) {
         final QueryResult queryResult = new QueryResult();
-        final QueryWithParameters rawQuery = query.toSelectQuery(DIALECT).get(0);
+        final QueryWithParameters rawQuery = query.toQueryBatch(DIALECT).get(0);
         engine.executeQuery(rawQuery.getSql(), rawQuery.getQueryParameters(), into(queryResult));
         return QueryResultAssertions.assertWith(queryResult);
     }

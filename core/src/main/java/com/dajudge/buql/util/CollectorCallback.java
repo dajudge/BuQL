@@ -1,12 +1,12 @@
 package com.dajudge.buql.util;
 
-import com.dajudge.buql.reflector.ReflectSelectQuery;
+import com.dajudge.buql.reflector.ReflectDatabaseOperation;
 
 import java.util.*;
 
 import static java.util.Collections.emptyList;
 
-public class CollectorCallback<R> implements ReflectSelectQuery.Callback<R> {
+public class CollectorCallback<R> implements ReflectDatabaseOperation.Callback<R> {
     private final Map<String, List<R>> ret = new HashMap<>();
     private final Collection<String> queriedKeys;
 

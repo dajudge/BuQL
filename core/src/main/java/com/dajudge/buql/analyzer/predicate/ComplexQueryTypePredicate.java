@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer.predicates;
+package com.dajudge.buql.analyzer.predicate;
 
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicateVisitor;
@@ -11,7 +11,7 @@ public class ComplexQueryTypePredicate implements ReflectorPredicate {
         this.queryClass = queryClass;
     }
 
-    public static ReflectorPredicate create(final Class<?> queryClass, final String predicateName) {
+    public static ReflectorPredicate create(final Class<?> queryClass) {
         return new ComplexQueryTypePredicate(queryClass);
     }
 

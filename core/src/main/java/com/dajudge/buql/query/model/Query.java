@@ -5,6 +5,6 @@ import com.dajudge.buql.query.dialect.Dialect;
 import java.util.List;
 
 public interface Query {
-    List<QueryWithParameters> toSelectQuery(Dialect dialect);
+    List<QueryWithParameters> toQueryBatch(Dialect dialect);
 
 }

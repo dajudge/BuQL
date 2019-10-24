@@ -2,8 +2,8 @@ package com.dajudge.buql.analyzer.select;
 
 import com.dajudge.buql.analyzer.Analyzer;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
-import com.dajudge.buql.reflector.model.MethodSelectModel;
-import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
+import com.dajudge.buql.reflector.model.select.MethodSelectModel;
+import com.dajudge.buql.reflector.model.select.ResultTypeModel;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 
 import java.lang.reflect.Method;
@@ -15,8 +15,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
-import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
+import static com.dajudge.buql.reflector.model.select.SelectMethodModelTranslator.translateMethodModelToQuery;
 import static com.dajudge.buql.util.StringUtils.lowercaseFirstLetter;
 
 public abstract class BaseSelectAnalyzer<Q, R> implements Analyzer {
@@ -40,10 +39,11 @@ public abstract class BaseSelectAnalyzer<Q, R> implements Analyzer {
         final ReflectorPredicate predicate = createPredicate(actualQueryClass, queryFieldName);
         final String resultFieldName = lowercaseFirstLetter(methodNameMatcher.group(1));
         final ResultTypeModel<R> resultFieldsModel = createResultFieldsModel(actualResultClass, resultFieldName);
-        final MethodSelectModel<Q, R> model = createSelectModel(
-                tableName,
+        final MethodSelectModel<Q, R> model = new MethodSelectModel<>(
                 predicate,
-                resultFieldsModel,
+                tableName,
+                resultFieldsModel.getResultFields(),
+                resultFieldsModel::newResultInstance,
                 createPreProcessor(),
                 createPostProcessor()
         );

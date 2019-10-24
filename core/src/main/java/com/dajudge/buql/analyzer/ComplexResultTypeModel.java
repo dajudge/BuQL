@@ -1,7 +1,7 @@
 package com.dajudge.buql.analyzer;
 
-import com.dajudge.buql.reflector.model.MethodSelectModelFactory;
-import com.dajudge.buql.reflector.model.ResultField;
+import com.dajudge.buql.reflector.model.select.ResultField;
+import com.dajudge.buql.reflector.model.select.ResultTypeModel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 import static com.dajudge.buql.analyzer.ComplexResultFieldsAnalyzer.createComplexResultFieldsAnalyzer;
 import static java.util.stream.Collectors.toList;
 
-public class ComplexResultTypeModel<R> implements MethodSelectModelFactory.ResultTypeModel<R> {
+public class ComplexResultTypeModel<R> implements ResultTypeModel<R> {
     public interface ResultFieldModel<R> {
         ResultField<R> getResultField();
 
@@ -47,7 +47,7 @@ public class ComplexResultTypeModel<R> implements MethodSelectModelFactory.Resul
         }
     }
 
-    public static <R> MethodSelectModelFactory.ResultTypeModel<R> create(final Class<R> clazz, final String fieldName) {
+    public static <R> ResultTypeModel<R> create(final Class<R> clazz, final String fieldName) {
         return new ComplexResultTypeModel<>(clazz);
     }
 }

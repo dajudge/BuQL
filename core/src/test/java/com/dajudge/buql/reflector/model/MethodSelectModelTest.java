@@ -1,14 +1,17 @@
 package com.dajudge.buql.reflector.model;
 
-import com.dajudge.buql.analyzer.select.BulkQueryPreProcessor;
 import com.dajudge.buql.analyzer.ComplexResultTypeModel;
-import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
+import com.dajudge.buql.analyzer.predicate.ComplexQueryTypePredicate;
+import com.dajudge.buql.analyzer.select.BulkQueryPreProcessor;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
+import com.dajudge.buql.reflector.ReflectDatabaseOperation;
+import com.dajudge.buql.reflector.ReflectDatabaseOperation.Callback;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.annotations.BooleanOperator;
-import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
+import com.dajudge.buql.reflector.model.select.MethodSelectModel;
+import com.dajudge.buql.reflector.model.select.ResultTypeModel;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 import org.junit.Test;
 
@@ -18,8 +21,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.dajudge.buql.reflector.annotations.BooleanOperationType.OR;
-import static com.dajudge.buql.reflector.model.MethodModelTranslator.translateMethodModelToQuery;
-import static com.dajudge.buql.reflector.model.MethodSelectModelFactory.createSelectModel;
+import static com.dajudge.buql.reflector.model.select.SelectMethodModelTranslator.translateMethodModelToQuery;
 import static java.util.Arrays.asList;
 import static java.util.function.Function.identity;
 
@@ -90,10 +92,17 @@ public class MethodSelectModelTest {
     @Test
     public void play() {
         final String tableName = "myTable";
-        final ReflectorPredicate predicate = ComplexQueryTypePredicate.create(OrFilter.class, null);
+        final ReflectorPredicate predicate = ComplexQueryTypePredicate.create(OrFilter.class);
         final ResultTypeModel<TestResultType> resultTypeModel = ComplexResultTypeModel.create(TestResultType.class, null);
         final Function<Object, Map<String, OrFilter>> preProcessor = new BulkQueryPreProcessor<>();
-        final MethodSelectModel model = createSelectModel(tableName, predicate, resultTypeModel, preProcessor, identity());
+        final MethodSelectModel model = new MethodSelectModel<>(
+                predicate,
+                tableName,
+                resultTypeModel.getResultFields(),
+                resultTypeModel::newResultInstance,
+                preProcessor,
+                identity()
+        );
         final HashMap<String, OrFilter> params = new HashMap<String, OrFilter>() {{
             put("ID0", new OrFilter(new OrFilter.Condition1("testValue"), new OrFilter.Condition2(42)));
         }};
@@ -121,7 +130,7 @@ public class MethodSelectModelTest {
                 throw new UnsupportedOperationException("Not implemented for this test");
             }
         };
-        query.execute(new PostgresDialect(), engine, params, new ReflectSelectQuery.Callback<TestResultType>() {
+        query.execute(new PostgresDialect(), engine, params, new Callback<TestResultType>() {
             @Override
             public void onResult(final String id, final TestResultType value) {
                 System.out.println(id + " -> " + value);
@@ -135,6 +144,11 @@ public class MethodSelectModelTest {
             @Override
             public void onError(final Exception e) {
                 System.out.println(e);
+            }
+
+            @Override
+            public Map<String, List<TestResultType>> getResult() {
+                return null;
             }
         });
     }

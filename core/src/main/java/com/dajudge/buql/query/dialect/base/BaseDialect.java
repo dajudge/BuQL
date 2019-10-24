@@ -5,13 +5,18 @@ import com.dajudge.buql.query.dialect.SqlCompareOperator;
 import com.dajudge.buql.query.model.QueryWithParameters;
 import com.dajudge.buql.query.model.expression.DataColExpression;
 import com.dajudge.buql.query.model.expression.FilterColExpression;
+import com.dajudge.buql.query.model.insert.InsertQuery;
 import com.dajudge.buql.query.model.select.ProjectionColumn.ProjectionSources;
 import com.dajudge.buql.query.model.select.SelectQuery;
+import com.dajudge.buql.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public abstract class BaseDialect implements Dialect {
     @Override
@@ -23,7 +28,7 @@ public abstract class BaseDialect implements Dialect {
     public String booleanOperation(final List<String> operands, final String operator) {
         return operands.size() == 1 ?
                 operands.get(0) :
-                "(" + operands.stream().collect(Collectors.joining(" " + operator + " ")) + ")";
+                "(" + operands.stream().collect(joining(" " + operator + " ")) + ")";
     }
 
     @Override
@@ -50,6 +55,20 @@ public abstract class BaseDialect implements Dialect {
         return op.toSql(left, right);
     }
 
+    @Override
+    public List<QueryWithParameters> insert(final InsertQuery insertQuery) {
+        return insertQuery.getInsertRows().stream().map(it -> insertInternal(insertQuery.getTable(), it)).collect(toList());
+    }
+
+    private QueryWithParameters insertInternal(final String table, final Map<String, Object> columns) {
+        final List<String> cols = new ArrayList<>(columns.keySet());
+        final String colsString = cols.stream().collect(joining(", "));
+        final String placeholders = StringUtils.repeat("?", ", ", cols.size());
+        final String sql = "INSERT INTO " + table + "(" + colsString + ") VALUES(" + placeholders + ")";
+        final List<Object> queryParameters = new ArrayList<>();
+        cols.forEach(col -> queryParameters.add(columns.get(col)));
+        return new QueryWithParameters(sql, queryParameters);
+    }
 
     @Override
     public final List<QueryWithParameters> select(final SelectQuery selectQuery) {

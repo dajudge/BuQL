@@ -1,13 +1,12 @@
-package com.dajudge.buql.query.model;
+package com.dajudge.buql.query.model.select;
 
+import com.dajudge.buql.query.model.QueryModel;
 import com.dajudge.buql.query.model.expression.QueryPredicate;
-import com.dajudge.buql.query.model.select.ProjectionColumn;
-import com.dajudge.buql.query.model.select.SelectQuery;
 
 import java.util.List;
 import java.util.function.Function;
 
-public class SelectQueryModel<Q> {
+public class SelectQueryModel<Q> implements QueryModel<Q, SelectQuery> {
     private final QueryPredicate predicate;
     private final List<String> filterColumns;
     private final List<ProjectionColumn> projectionColumns;
@@ -28,7 +27,8 @@ public class SelectQueryModel<Q> {
         this.filterValuesExtractor = filterValuesExtractor;
     }
 
-    public SelectQuery create(final Q queryObject) {
+    @Override
+    public SelectQuery createQuery(final Q queryObject) {
         return new SelectQuery(
                 projectionColumns,
                 filterValuesExtractor.apply(queryObject),

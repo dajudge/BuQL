@@ -1,7 +1,7 @@
 package com.dajudge.buql.analyzer.select;
 
-import com.dajudge.buql.analyzer.predicates.ComplexQueryTypePredicate;
-import com.dajudge.buql.analyzer.predicates.PrimitiveQueryTypePredicate;
+import com.dajudge.buql.analyzer.predicate.ComplexQueryTypePredicate;
+import com.dajudge.buql.analyzer.predicate.PrimitiveQueryTypePredicate;
 
 import java.lang.reflect.Type;
 import java.util.function.Predicate;
@@ -14,7 +14,7 @@ public enum QueryTypeComplexity {
         return PrimitiveQueryTypePredicate.create(null, predicateName);
     }, "[A-Z].*", isPrimitiveType()),
     COMPLEX((actualQueryType, predicateName) -> {
-        return ComplexQueryTypePredicate.create(actualQueryType, null);
+        return ComplexQueryTypePredicate.create(actualQueryType);
     }, "[A-Z].*", isComplexType());
 
     private final ReflectorPredicateFactory reflectorPredicateFactory;

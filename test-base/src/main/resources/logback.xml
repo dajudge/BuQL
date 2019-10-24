@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.dajudge" level="DEBUG" />
+    <logger name="com.dajudge" level="TRACE" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

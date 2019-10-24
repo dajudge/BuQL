@@ -1,8 +1,8 @@
-package com.dajudge.buql.reflector.model;
+package com.dajudge.buql.reflector.model.select;
 
-import com.dajudge.buql.query.model.SelectQueryModel;
 import com.dajudge.buql.query.model.expression.QueryPredicate;
 import com.dajudge.buql.query.model.select.ProjectionColumn;
+import com.dajudge.buql.query.model.select.SelectQueryModel;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.ResultMapper;
 import com.dajudge.buql.reflector.translate.FilterFieldsMapping;
@@ -21,11 +21,11 @@ import static com.dajudge.buql.query.model.select.ProjectionColumn.fromFilters;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public final class MethodModelTranslator {
+public final class SelectMethodModelTranslator {
     private static final String ROW_ID_COLUMN = "M_ID";
     private static final String ROW_ID_LABEL = "P_ID";
 
-    private MethodModelTranslator() {
+    private SelectMethodModelTranslator() {
     }
 
     private static class ProjectionColumnWrapper {

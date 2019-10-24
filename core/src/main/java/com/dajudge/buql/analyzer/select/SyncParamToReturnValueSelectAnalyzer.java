@@ -1,7 +1,7 @@
 package com.dajudge.buql.analyzer.select;
 
 import com.dajudge.buql.analyzer.ReflectionUtil;
-import com.dajudge.buql.reflector.model.MethodSelectModelFactory.ResultTypeModel;
+import com.dajudge.buql.reflector.model.select.ResultTypeModel;
 import com.dajudge.buql.reflector.predicate.ReflectorPredicate;
 
 import java.lang.reflect.Type;

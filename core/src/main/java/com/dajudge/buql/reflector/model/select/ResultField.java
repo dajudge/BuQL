@@ -1,4 +1,4 @@
-package com.dajudge.buql.reflector.model;
+package com.dajudge.buql.reflector.model.select;
 
 public class ResultField<R> {
     private final String tableColumn;
