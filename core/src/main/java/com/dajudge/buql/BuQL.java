@@ -46,7 +46,7 @@ public class BuQL {
     }
 
     @SuppressWarnings("unchecked")
-    private <Q,R,I> ReflectDatabaseOperation<Q, I, R> compile(final String tableName, final Method method) {
+    private <Q, R, I> ReflectDatabaseOperation<Q, I, R> compile(final String tableName, final Method method) {
         final List<? extends ReflectDatabaseOperation<?, ?, ?>> candidates = ANALYZERS.stream()
                 .map(c -> c.convert(tableName, method))
                 .filter(Optional::isPresent)
