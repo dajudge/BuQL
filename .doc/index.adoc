@@ -58,8 +58,8 @@ P.firstName | P.lastName
 ------------------------
 Clark       | Kent
 ----
-While identical in structure, these two queries (and their results) usually are transmitted and executed separately
-to the database.
+While identical in structure, these two queries (and their results) usually are transmitted to/from the database and executed separately there.
+
 
 
 These two queries could be merged into one single `SELECT` statement using a _Table Value Constructor_ (I'm using
@@ -193,7 +193,7 @@ In order to execute the query of the previous example we'd need to write the fol
 // Assume BuQL is already initialized properly
 
 // Get BuQL's implementation of the repository interface
-PersonRepository repository = buql.up();
+PersonRepository repository = buql.up(PersonRepository.class);
 
 // Define the query parameters in a map
 Map<String, DepartmentAndJobLevel> queryParams = new HashMap<>();
