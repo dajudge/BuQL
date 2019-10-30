@@ -1,6 +1,6 @@
 package com.dajudge.buql.analyzer.insert;
 
-import com.dajudge.buql.analyzer.Analyzer;
+import com.dajudge.buql.analyzer.api.Analyzer;
 import com.dajudge.buql.analyzer.ReflectionUtil;
 import com.dajudge.buql.reflector.ReflectInsertQuery;
 import com.dajudge.buql.reflector.model.insert.MethodInsertModel;

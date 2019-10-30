@@ -1,4 +1,4 @@
-package com.dajudge.buql.analyzer;
+package com.dajudge.buql.analyzer.api;
 
 import com.dajudge.buql.reflector.ReflectDatabaseOperation;
 
