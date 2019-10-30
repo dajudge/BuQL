@@ -1,8 +1,8 @@
 package com.dajudge.buql.analyzer.select;
 
 import com.dajudge.buql.analyzer.api.Analyzer;
-import com.dajudge.buql.analyzer.methodmatcher.MethodMatcherResult;
 import com.dajudge.buql.analyzer.methodmatcher.MethodMatcher;
+import com.dajudge.buql.analyzer.methodmatcher.MethodMatcherResult;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.model.select.MethodSelectModel;
 import com.dajudge.buql.reflector.model.select.ResultTypeModel;

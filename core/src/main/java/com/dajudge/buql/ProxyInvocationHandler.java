@@ -38,7 +38,7 @@ class ProxyInvocationHandler<Q, R, I> implements InvocationHandler {
         return query.postProcess(cb.getResult());
     }
 
-    private  ReflectDatabaseOperation<Q, I, R> getCachedOrNewQuery(
+    private ReflectDatabaseOperation<Q, I, R> getCachedOrNewQuery(
             final Function<Method, ReflectDatabaseOperation<Q, I, R>> compiler,
             final Method method
     ) {
