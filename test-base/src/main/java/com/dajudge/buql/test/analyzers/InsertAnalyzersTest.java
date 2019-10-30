@@ -39,6 +39,19 @@ public class InsertAnalyzersTest extends BuqlTest {
         assertEquals(objectsToCreate.get(1), results.get("ID1"));
     }
 
+    @Test
+    public void inserts_single() {
+        final FullObject objectToCreate = new FullObject(10L, "stringValue10", 52L, "nullableValue10");
+
+        repository.create(objectToCreate);
+
+        final Map<String, FullObject> results = repository.getByPk(new HashMap<String, Long>() {{
+            put("ID0", objectToCreate.getPk());
+        }});
+        assertEquals(1, results.size());
+        assertEquals(objectToCreate, results.get("ID0"));
+    }
+
     @Table("mytable")
     public interface InsertTestRepository {
         void create(final List<FullObject> objects);

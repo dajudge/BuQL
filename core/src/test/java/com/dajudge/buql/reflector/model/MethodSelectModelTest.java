@@ -6,7 +6,6 @@ import com.dajudge.buql.analyzer.select.BulkQueryPreProcessor;
 import com.dajudge.buql.query.dialect.postgres.PostgresDialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
 import com.dajudge.buql.query.engine.DatabaseResultCallback;
-import com.dajudge.buql.reflector.ReflectDatabaseOperation;
 import com.dajudge.buql.reflector.ReflectDatabaseOperation.Callback;
 import com.dajudge.buql.reflector.ReflectSelectQuery;
 import com.dajudge.buql.reflector.annotations.BooleanOperator;

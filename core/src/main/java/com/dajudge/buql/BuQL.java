@@ -2,6 +2,7 @@ package com.dajudge.buql;
 
 import com.dajudge.buql.analyzer.Analyzer;
 import com.dajudge.buql.analyzer.insert.InsertCollectionAnalyzer;
+import com.dajudge.buql.analyzer.insert.InsertSingleAnalyzer;
 import com.dajudge.buql.analyzer.select.*;
 import com.dajudge.buql.query.dialect.Dialect;
 import com.dajudge.buql.query.engine.DatabaseEngine;
@@ -36,7 +37,8 @@ public class BuQL {
                     .flatMap(identity()))
             .flatMap(identity());
     private static final Stream<Analyzer> INSERT_ANALYZERS = Stream.of(
-            new InsertCollectionAnalyzer()
+            new InsertCollectionAnalyzer(),
+            new InsertSingleAnalyzer()
     );
     private static final Collection<Analyzer> ANALYZERS = Stream.of(
             SELECT_ANALYZERS,

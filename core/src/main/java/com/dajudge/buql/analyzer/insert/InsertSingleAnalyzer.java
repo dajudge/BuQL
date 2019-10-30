@@ -6,16 +6,15 @@ import java.lang.reflect.Type;
 import java.util.function.Predicate;
 
 import static com.dajudge.buql.analyzer.ReflectionUtil.isComplexType;
-import static com.dajudge.buql.analyzer.ReflectionUtil.listOf;
 
-public class InsertCollectionAnalyzer extends BaseInsertAnalyzer {
+public class InsertSingleAnalyzer extends BaseInsertAnalyzer {
     @Override
     public Predicate<Type> getQueryTypeExtractor(final ReflectionUtil.TypeCaptor captor) {
-        return listOf(captor.captureIf(isComplexType()));
+        return captor.captureIf(isComplexType());
     }
 
     @Override
-    public <Q> BulkInsertPreProcessor<Q> createPreProcessor() {
-        return new BulkInsertPreProcessor<>();
+    public <Q> SingleInsertPreProcessor<Q> createPreProcessor() {
+        return new SingleInsertPreProcessor<>();
     }
 }
